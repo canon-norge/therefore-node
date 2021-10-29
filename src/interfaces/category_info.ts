@@ -1,0 +1,43 @@
+import { IWSCategoryField } from './ws_category_field';
+
+export interface ICategoryInfo {
+  AutoAppendMode: number | undefined;
+  BelongsToCaseDefintion: number;
+  CategoryFields: IWSCategoryField[] | null[] | null;
+  CategoryNo: number | undefined;
+  CheckInCommentsMode: number | undefined;
+  Description: string | null;
+  DocumentTitleLength: number | undefined;
+  FieldCount: number | undefined;
+  FolderNo: number | undefined;
+  Guid: string | undefined;
+  Height: number | undefined;
+  IsFulltextEnabled: boolean | undefined;
+  Name: string | null;
+  NewVersionOnIndexDataChange: boolean | undefined;
+  QueryTemplateNo: number | undefined;
+  SubCtgryFieldIx: number | undefined;
+  TableName: string | null;
+  Title: string | null;
+  Version: number | undefined;
+  WatermarkDocNo: number | undefined;
+  WatermarkHPos: number | undefined;
+  WatermarkResolution: number | undefined;
+  WatermarkVPos: number | undefined;
+  Width: number | undefined;
+  WorkflowFolder: string | null;
+  WorkflowForm: string | null;
+  WorkflowProcessNo: number | undefined;
+  WorkflowProcessNoUpdate: number | undefined;
+  BackgroundColor: number | undefined;
+  CoverMode: number | undefined;
+  DocumentPreview: boolean | undefined;
+  EmptyDocMode: number | undefined;
+  FullTextDate: string | undefined;
+  FullTextMode: number | undefined;
+  AccessMask: null;
+  FieldNoSearchOrder: number[] | null[] | null;
+  RoleAccessMask: number | null;
+  AvailableLCIDs: number[] | null[] | null;
+  CurrentLCID: number | undefined;
+}

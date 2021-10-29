@@ -1,0 +1,8 @@
+{
+  "name": "therefore-node",
+  "verbose": true,
+  "transform": {},
+  "extensionsToTreatAsEsm": [
+    ".ts"
+  ]
+}
