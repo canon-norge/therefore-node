@@ -1,4 +1,5 @@
-import fetch from 'node-fetch';
+// import 'whatwg-fetch'
+var Buffer = require('buffer/').Buffer
 import { CategoriesTree } from './models/categories_tree.js';
 import { ICategoryInfo } from './interfaces/category_info.js';
 import { CounterMode } from './enums/counter_mode.js';
@@ -39,7 +40,14 @@ class Therefore {
       body: JSON.stringify(body),
     };
     console.log('Getting Categories tree...');
-    const response = await fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
+    console.log(this.url)
+    console.log(request.body)
+    const response = await window.fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
+    if(response.status === 500){
+      let body = await response.text();
+      console.error(body)
+      throw new Error("Getting Categories tree failed");
+    }
     const data: CategoriesTree = (await response.json()) as CategoriesTree;
     return data;
   }
@@ -95,7 +103,7 @@ class Therefore {
   }
 }
 
-export default Therefore;
+export { Therefore };
 export { CategoriesTree };
 export { TreeItem };
 export { CounterMode };

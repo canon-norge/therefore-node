@@ -2,40 +2,33 @@
   "name": "therefore-node",
   "version": "1.0.2",
   "private": true,
+  "main": "dist/therefore-node.js",
+  "module": "dist/therefore-node.esm.js",
+  "browser": "dist/therefore-node.umd.js",
   "description": "Therefore Web API wrapper",
-  "exports": "./lib/index.js",
-  "types": "lib/index.d.ts",
-  "type": "module",
-  "engines": {
-    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
-  },
   "scripts": {
-    "build": "rimraf ./lib && tsc",
-    "buildSingle": "rimraf ./lib && tsc --outFile there",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "tslint -p tsconfig.json",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "ts-node test/test.ts",
+    "pretest": "npm run build"
   },
-  "file": [
-    "lib/**/*"
-  ],
-  "keywords": [
-    "Therefore",
-    "Node.js"
-  ],
   "author": "Marensius Bae Pettersen",
   "license": "MIT",
   "devDependencies": {
+    "@babel/preset-typescript": "^7.15.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.6",
     "@types/uuid": "^8.3.1",
     "jest": "^27.3.1",
     "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript": "^1.0.1",
     "ts-jest": "^27.0.7",
+    "tslib": "^2.3.1",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.4.4",
@@ -43,12 +36,11 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "@babel/preset-typescript": "^7.15.0",
-    "node-fetch": ">=3.0.0",
-    "rimraf": "^3.0.2",
-    "uuid": "^8.3.2"
+    "buffer": "^6.0.3",
+    "uuid": "^8.3.2",
+    "whatwg-fetch": "^3.6.2"
   },
-  "include": [
-    "src/**/*"
+  "files": [
+    "dist"
   ]
 }
