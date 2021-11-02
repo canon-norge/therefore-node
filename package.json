@@ -1,9 +1,9 @@
 {
   "name": "therefore-node",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "description": "Therefore Web API wrapper",
-  "exports": "./lib/src/therefore.js",
+  "exports": "./lib/index.js",
   "types": "lib/index.d.ts",
   "type": "module",
   "engines": {
