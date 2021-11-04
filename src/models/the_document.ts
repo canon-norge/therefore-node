@@ -33,6 +33,7 @@ export class TheDocument implements ITheDocument {
     this.CategoryNo = categoryNo;
     this.IndexDataItems = indexDataItems;
     this.Streams = streams;
+    this.WithAutoAppendMode = 2
     this.DoFillDependentFields = this.WithAutoAppendMode = this.ConversionOptions = this.FileUploadSessions = null;
   }
 }

@@ -2,32 +2,8 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
-
 class CategoriesTree {
+    TreeItems;
     constructor(treeItems) {
         this.TreeItems = treeItems;
     }
@@ -41,6 +17,14 @@ exports.CounterMode = void 0;
 })(exports.CounterMode || (exports.CounterMode = {}));
 
 class TreeItem {
+    ChildItems;
+    FolderType;
+    Guid;
+    ItemNo;
+    ItemType;
+    Name;
+    ParentCaseDefNo;
+    ParentFolderNo;
     constructor(childItems, folderType, guid, itemNo, itemType, name, parentCaseDefNo, parentFolderNo) {
         this.ChildItems = childItems;
         this.FolderType = folderType;
@@ -54,6 +38,15 @@ class TreeItem {
 }
 
 class TheDocument {
+    CategoryNo;
+    IndexDataItems;
+    Streams;
+    DoFillDependentFields;
+    WithAutoAppendMode;
+    ConversionOptions;
+    LastChangeTime;
+    DontResetCategoryDefaults;
+    FileUploadSessions;
     // constructor(categoryNo: number, indexDataItems: IWSIndexDataItem[] | null, streams: IWSStreamInfoWithData[] | null, doFillDependentFields: boolean | null, withAutoAppendMode: number | null, conversionOptions: IConversionOptions | null, lastchangeTime: string | undefined, dontResetCategoryDefaults: boolean | undefined, fileUploadSessions: IWSStreamInfoUploadSessionData[] | null) {
     //     this.CategoryNo = categoryNo
     //     this.IndexDataItems = indexDataItems
@@ -69,6 +62,7 @@ class TheDocument {
         this.CategoryNo = categoryNo;
         this.IndexDataItems = indexDataItems;
         this.Streams = streams;
+        this.WithAutoAppendMode = 2;
         this.DoFillDependentFields = this.WithAutoAppendMode = this.ConversionOptions = this.FileUploadSessions = null;
     }
 }
@@ -120,6 +114,16 @@ exports.FieldType = void 0;
 })(exports.FieldType || (exports.FieldType = {}));
 
 class WSIndexDataItem {
+    DateIndexData; //IDateIndexData |
+    IntIndexData; // IIntIndexData |
+    LogicalIndexData; // ILogicalIndexData |
+    MoneyIndexData; // IMoneyIndexData |
+    MultipleKeywordData; //IMultipleKeywordData |
+    SingleKeywordData; // ISingleKeywordData |
+    StringIndexData;
+    TableIndexData; // ITableIndexData |
+    AccessMask; // IAccessMask |
+    DateTimeIndexData; // IDateTimeIndexData |
     constructor(stringIndexData) {
         this.DateIndexData =
             this.IntIndexData =
@@ -136,6 +140,9 @@ class WSIndexDataItem {
 }
 
 class StringIndexData {
+    FieldNo;
+    DataValue;
+    FieldName;
     constructor(fieldNo, dataValue, fieldName) {
         this.FieldNo = fieldNo;
         this.DataValue = dataValue;
@@ -144,6 +151,9 @@ class StringIndexData {
 }
 
 class WSStreamInfoWithData {
+    FileData;
+    FileName;
+    StreamNo;
     constructor(fileData, fileName) {
         this.FileData = fileData;
         this.FileName = fileName;
@@ -151,89 +161,81 @@ class WSStreamInfoWithData {
     }
 }
 
-// import 'whatwg-fetch'
 var Buffer = require('buffer/').Buffer;
+require('isomorphic-fetch');
 class Therefore {
+    url;
+    username;
+    password;
     constructor(url, username, password) {
-        this.apiVersion = 'theservice/v0001/restun/';
         url.slice(-1) == '/' ? (this.url = url) : (this.url = url + '/');
         this.username = username;
         this.password = password;
     }
+    apiVersion = 'theservice/v0001/restun/';
     getAuthorization() {
         return 'Basic ' + Buffer.from(this.username + ':' + this.password).toString('base64');
     }
-    getCategoriesTree() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const body = {};
-            const request = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: this.getAuthorization(),
-                },
-                body: JSON.stringify(body),
-            };
-            console.log('Getting Categories tree...');
-            console.log(this.url);
-            console.log(request.body);
-            const response = yield window.fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
-            if (response.status === 500) {
-                let body = yield response.text();
-                console.error(body);
-                throw new Error("Getting Categories tree failed");
-            }
-            const data = (yield response.json());
-            return data;
-        });
+    async getCategoriesTree() {
+        const body = {};
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.getAuthorization(),
+            },
+            body: JSON.stringify(body),
+        };
+        console.log('Getting Categories tree...');
+        const response = await fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
+        if (response.status === 500) {
+            let body = await response.text();
+            console.error(body);
+            throw new Error("Getting Categories tree failed");
+        }
+        const data = (await response.json());
+        return data;
     }
-    getCategoryNo(CategoryName) {
-        var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            let categoriesTree = yield this.getCategoriesTree();
-            return (_a = categoriesTree.TreeItems.find((treeItem) => treeItem.Name === CategoryName)) === null || _a === void 0 ? void 0 : _a.ItemNo;
-        });
+    async getCategoryNo(CategoryName) {
+        let categoriesTree = await this.getCategoriesTree();
+        return categoriesTree.TreeItems.find((treeItem) => treeItem.Name === CategoryName)?.ItemNo;
     }
     // _recursiveCategoryNoSearch = (objectToSearch: TreeItem, categoryNoToFind: number,resultArray :number[]) => {
     //     objectToSearch.
     //     if (objectToSearch.ChildItems !== undefined){
     //     }
     // }
-    getCategoryInfo(CategoryNo) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const body = {
-                CategoryNo: CategoryNo,
-            };
-            const request = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: this.getAuthorization(),
-                },
-                body: JSON.stringify(body),
-            };
-            console.log(`Getting CategoryNo. ${CategoryNo} info...`);
-            const response = yield fetch(this.url + this.apiVersion + 'GetCategoryInfo', request);
-            const data = (yield response.json());
-            return data;
-        });
+    async getCategoryInfo(CategoryNo) {
+        const body = {
+            CategoryNo: CategoryNo,
+        };
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.getAuthorization(),
+            },
+            body: JSON.stringify(body),
+        };
+        console.log(`Getting CategoryNo. ${CategoryNo} info...`);
+        const response = await fetch(this.url + this.apiVersion + 'GetCategoryInfo', request);
+        const data = (await response.json());
+        return data;
     }
-    createDocument(doucment) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Creating Document...`);
-            const body = doucment;
-            const request = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: this.getAuthorization(),
-                },
-                body: JSON.stringify(body),
-            };
-            const response = yield fetch(this.url + this.apiVersion + 'CreateDocument', request);
-            const data = (yield response.json());
-            return data;
-        });
+    async createDocument(doucment) {
+        console.log(`Creating Document...`);
+        const body = doucment;
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.getAuthorization(),
+            },
+            body: JSON.stringify(body),
+        };
+        const response = await fetch(this.url + this.apiVersion + 'CreateDocument', request);
+        const data = (await response.json());
+        return data;
     }
 }
 

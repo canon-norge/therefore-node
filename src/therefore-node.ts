@@ -1,5 +1,5 @@
-// import 'whatwg-fetch'
 var Buffer = require('buffer/').Buffer
+require('isomorphic-fetch');
 import { CategoriesTree } from './models/categories_tree.js';
 import { ICategoryInfo } from './interfaces/category_info.js';
 import { CounterMode } from './enums/counter_mode.js';
@@ -40,9 +40,7 @@ class Therefore {
       body: JSON.stringify(body),
     };
     console.log('Getting Categories tree...');
-    console.log(this.url)
-    console.log(request.body)
-    const response = await window.fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
+    const response = await fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
     if(response.status === 500){
       let body = await response.text();
       console.error(body)
