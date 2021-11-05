@@ -47,23 +47,40 @@ class TheDocument {
     LastChangeTime;
     DontResetCategoryDefaults;
     FileUploadSessions;
-    // constructor(categoryNo: number, indexDataItems: IWSIndexDataItem[] | null, streams: IWSStreamInfoWithData[] | null, doFillDependentFields: boolean | null, withAutoAppendMode: number | null, conversionOptions: IConversionOptions | null, lastchangeTime: string | undefined, dontResetCategoryDefaults: boolean | undefined, fileUploadSessions: IWSStreamInfoUploadSessionData[] | null) {
-    //     this.CategoryNo = categoryNo
-    //     this.IndexDataItems = indexDataItems
-    //     this.Streams = streams
-    //     this.DoFillDependentFields = doFillDependentFields
-    //     this.WithAutoAppendMode = withAutoAppendMode
-    //     this.ConversionOptions = conversionOptions
-    //     this.LastChangeTime = lastchangeTime
-    //     this.DontResetCategoryDefaults = dontResetCategoryDefaults
-    //     this.FileUploadSessions = fileUploadSessions
-    // }
-    constructor(categoryNo, indexDataItems, streams) {
+    /**
+     * @param categoryNo
+     * The number of the category the document belongs to.
+     * @param indexDataItems
+     * Index data items of the document.
+     * @param streams
+     * Represents list of files to store within the document.
+     * @param doFillDependentFields
+     * Set to true or false to explicitly execute or skip FillDependentFields step while writing index data.
+     * If not set or null the old behavior will be used.
+     * That means the FillDependentFields step will be executed.
+     * Note: In order to update primary and dependent fields you can: 1. specify both values (for primary and dependent) or just for primary.
+     * In this case primary field will be used to lookup related value(s) for dependent field(s).
+     * Value of dependent field(s) from the request will be ignored. 2. specify value of dependent field(s) only.
+     * In this case if a unique primary field (related to given dependent field(s)) can be found it will be used.
+     * Otherwise, if there are many values found for primary field an error will be returned.
+     * @param withAutoAppendMode
+     * Sets auto append mode for the document.
+     * Null or omitted value means that auto append mode is Disabled.
+     * With Enabled auto append mode use IndexDataItems to specify unique identifier of the document.
+     * @param conversionOptions
+     * Specifies options to convert the files.
+     * @param fileUploadSessions
+     * Represents list of file upload sessions to be used to store files within the document.
+     * See the UploadSessionStart and UploadSessionAppendChunk methods for more details.
+     */
+    constructor(categoryNo, indexDataItems, streams = null, doFillDependentFields = null, withAutoAppendMode = null, conversionOptions = null, fileUploadSessions) {
         this.CategoryNo = categoryNo;
         this.IndexDataItems = indexDataItems;
         this.Streams = streams;
-        this.WithAutoAppendMode = 2;
-        this.DoFillDependentFields = this.WithAutoAppendMode = this.ConversionOptions = this.FileUploadSessions = null;
+        this.DoFillDependentFields = doFillDependentFields;
+        this.WithAutoAppendMode = withAutoAppendMode;
+        this.ConversionOptions = conversionOptions;
+        this.FileUploadSessions = fileUploadSessions;
     }
 }
 
@@ -114,28 +131,40 @@ exports.FieldType = void 0;
 })(exports.FieldType || (exports.FieldType = {}));
 
 class WSIndexDataItem {
-    DateIndexData; //IDateIndexData |
-    IntIndexData; // IIntIndexData |
-    LogicalIndexData; // ILogicalIndexData |
-    MoneyIndexData; // IMoneyIndexData |
-    MultipleKeywordData; //IMultipleKeywordData |
-    SingleKeywordData; // ISingleKeywordData |
+    DateIndexData;
+    IntIndexData;
+    LogicalIndexData;
+    MoneyIndexData;
+    MultipleKeywordData;
+    SingleKeywordData;
     StringIndexData;
     TableIndexData; // ITableIndexData |
     AccessMask; // IAccessMask |
     DateTimeIndexData; // IDateTimeIndexData |
-    constructor(stringIndexData) {
-        this.DateIndexData =
-            this.IntIndexData =
-                this.LogicalIndexData =
-                    this.MoneyIndexData =
-                        this.MultipleKeywordData =
-                            this.SingleKeywordData =
-                                this.TableIndexData =
-                                    this.AccessMask =
-                                        this.DateTimeIndexData =
-                                            null;
-        this.StringIndexData = stringIndexData;
+    /**
+     *
+     * @param dateIndexData
+     * @param intIndexData
+     * @param logicalIndexData
+     * @param moneyIndexData
+     * @param multipleKeywordData
+     * @param singleKeywordData
+     * @param stringIndexData
+     * @param tableIndexData
+     * @param accessMask Gets access mask for index data field (column) for connected user.
+     * @param dateTimeIndexData
+     */
+    constructor(dateIndexData, intIndexData, logicalIndexData, moneyIndexData, multipleKeywordData, singleKeywordData, stringIndexData, tableIndexData, accessMask, dateTimeIndexData) {
+        this.DateIndexData = dateIndexData;
+        this.IntIndexData = intIndexData;
+        this.LogicalIndexData = logicalIndexData;
+        this.MoneyIndexData = moneyIndexData,
+            this.MultipleKeywordData = multipleKeywordData,
+            this.SingleKeywordData = singleKeywordData;
+        this.StringIndexData = stringIndexData,
+            this.TableIndexData = tableIndexData,
+            this.AccessMask = accessMask,
+            this.DateTimeIndexData = dateTimeIndexData;
     }
 }
 
@@ -143,6 +172,17 @@ class StringIndexData {
     FieldNo;
     DataValue;
     FieldName;
+    /**
+     *
+     * @param fieldNo
+     * Gets or sets the number of the field.
+     * Doing request set it to proper field number or to 0 (zero) in order to use the FieldName property instead.
+     * @param dataValue
+     * Gets or sets the string value of the field.
+     * @param fieldName
+     * Gets or sets the name (actually column name) of the field.
+     * Doing request set the FieldNo property to 0 (zero) in order to use specified FieldName.
+     */
     constructor(fieldNo, dataValue, fieldName) {
         this.FieldNo = fieldNo;
         this.DataValue = dataValue;
@@ -167,75 +207,14 @@ class Therefore {
     url;
     username;
     password;
+    authHeader;
+    apiVersion;
     constructor(url, username, password) {
         url.slice(-1) == '/' ? (this.url = url) : (this.url = url + '/');
         this.username = username;
         this.password = password;
-    }
-    apiVersion = 'theservice/v0001/restun/';
-    getAuthorization() {
-        return 'Basic ' + Buffer.from(this.username + ':' + this.password).toString('base64');
-    }
-    async getCategoriesTree() {
-        const body = {};
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.getAuthorization(),
-            },
-            body: JSON.stringify(body),
-        };
-        console.log('Getting Categories tree...');
-        const response = await fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
-        if (response.status === 500) {
-            let body = await response.text();
-            console.error(body);
-            throw new Error("Getting Categories tree failed");
-        }
-        const data = (await response.json());
-        return data;
-    }
-    async getCategoryNo(CategoryName) {
-        let categoriesTree = await this.getCategoriesTree();
-        return categoriesTree.TreeItems.find((treeItem) => treeItem.Name === CategoryName)?.ItemNo;
-    }
-    // _recursiveCategoryNoSearch = (objectToSearch: TreeItem, categoryNoToFind: number,resultArray :number[]) => {
-    //     objectToSearch.
-    //     if (objectToSearch.ChildItems !== undefined){
-    //     }
-    // }
-    async getCategoryInfo(CategoryNo) {
-        const body = {
-            CategoryNo: CategoryNo,
-        };
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.getAuthorization(),
-            },
-            body: JSON.stringify(body),
-        };
-        console.log(`Getting CategoryNo. ${CategoryNo} info...`);
-        const response = await fetch(this.url + this.apiVersion + 'GetCategoryInfo', request);
-        const data = (await response.json());
-        return data;
-    }
-    async createDocument(doucment) {
-        console.log(`Creating Document...`);
-        const body = doucment;
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.getAuthorization(),
-            },
-            body: JSON.stringify(body),
-        };
-        const response = await fetch(this.url + this.apiVersion + 'CreateDocument', request);
-        const data = (await response.json());
-        return data;
+        this.authHeader = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+        this.apiVersion = 'theservice/v0001/restun/';
     }
 }
 

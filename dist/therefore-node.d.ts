@@ -1,5 +1,4 @@
 import { CategoriesTree } from './models/categories_tree.js';
-import { ICategoryInfo } from './interfaces/category_info.js';
 import { CounterMode } from './enums/counter_mode.js';
 import { TreeItem } from './models/tree_item.js';
 import { TheDocument } from './models/the_document.js';
@@ -13,13 +12,9 @@ declare class Therefore {
     url: string;
     username: string;
     password: string;
-    constructor(url: string, username: string, password: string);
+    authHeader: string;
     apiVersion: string;
-    getAuthorization(): string;
-    getCategoriesTree(): Promise<CategoriesTree>;
-    getCategoryNo(CategoryName: string): Promise<number | undefined>;
-    getCategoryInfo(CategoryNo: number): Promise<ICategoryInfo>;
-    createDocument(doucment: TheDocument): Promise<ICategoryInfo>;
+    constructor(url: string, username: string, password: string);
 }
 export { Therefore };
 export { CategoriesTree };

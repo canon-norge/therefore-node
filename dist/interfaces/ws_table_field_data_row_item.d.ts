@@ -7,7 +7,7 @@ import { IStringIndexData } from './string_index_data';
 export interface IWSTableFieldDataRowItem {
     DateIndexData: IDateIndexData | null;
     IntIndexData: IIntIndexData | null;
-    LogicalIndexdata: ILogicalIndexData | null;
+    LogicalIndexData: ILogicalIndexData | null;
     MoneyIndexData: IMoneyIndexData | null;
     SingleKeywordData: ISingleKeywordData | null;
     StringIndexData: IStringIndexData | null;
