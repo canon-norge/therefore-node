@@ -1,22 +1,22 @@
-import { IStringIndexData } from '../interfaces/string_index_data';
+import { ITableIndexData } from "../interfaces/table_index_data";
+import { WSTableFieldDataRow } from "./ws_table_field_data_row";
+export class TableIndexData implements ITableIndexData {
+    FieldNo: number;
+    DataValue: WSTableFieldDataRow[] | null;
+    FieldName: string | null;
 
-export class StringIndexData implements IStringIndexData {
-  FieldNo: number;
-  DataValue: string | null;
-  FieldName: string | null;
-
-  /**
+    /**
    * 
    * @param fieldNo 
    * Gets or sets the number of the field.
    * Doing request set it to proper field number or to 0 (zero) in order to use the FieldName property instead.
    * @param dataValue 
-   * Gets or sets the string value of the field.
+   * Gets or sets row with data in table field
    * @param fieldName 
    * Gets or sets the name (actually column name) of the field.
    * Doing request set the FieldNo property to 0 (zero) in order to use specified FieldName.
    */
-  constructor(fieldNo: number, dataValue: string | null, fieldName: string | null) {
+  constructor(fieldNo: number, dataValue: WSTableFieldDataRow[] | null, fieldName: string | null) {
     this.FieldNo = fieldNo;
     this.DataValue = dataValue;
     this.FieldName = fieldName;

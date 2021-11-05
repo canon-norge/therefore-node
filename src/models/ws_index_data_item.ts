@@ -1,30 +1,61 @@
 import { IWSIndexDataItem } from '../interfaces/ws_index_data_item.js';
+import { AccessMask } from './access_mask.js';
+import { DateIndexData } from './date_index_data.js';
+import { DateTimeIndexData } from './date_time_index_data.js';
+import { IntIndexData } from './int_index_data.js';
+import { LogicalIndexData } from './logical_index_data.js';
+import { MoneyIndexData } from './money_index_data.js';
+import { MultipleKeywordData } from './multiple_keyword_data.js';
+import { SingleKeywordData } from './single_keyword_data.js';
 import { StringIndexData } from './string_index_data.js';
+import { TableIndexData } from './table_index_data.js';
 
 export class WSIndexDataItem implements IWSIndexDataItem {
-  DateIndexData: null; //IDateIndexData |
-  IntIndexData: null; // IIntIndexData |
-  LogicalIndexData: null; // ILogicalIndexData |
-  MoneyIndexData: null; // IMoneyIndexData |
-  MultipleKeywordData: null; //IMultipleKeywordData |
-  SingleKeywordData: null; // ISingleKeywordData |
+  DateIndexData: DateIndexData | null;
+  IntIndexData: IntIndexData | null;
+  LogicalIndexData: LogicalIndexData | null;
+  MoneyIndexData: MoneyIndexData | null;
+  MultipleKeywordData: MultipleKeywordData | null;
+  SingleKeywordData: SingleKeywordData | null;
   StringIndexData: StringIndexData | null;
-  TableIndexData: null; // ITableIndexData |
-  AccessMask: null; // IAccessMask |
-  DateTimeIndexData: null; // IDateTimeIndexData |
+  TableIndexData: TableIndexData | null; // ITableIndexData |
+  AccessMask: AccessMask | null; // IAccessMask |
+  DateTimeIndexData: DateTimeIndexData | null; // IDateTimeIndexData |
 
-  constructor(stringIndexData: StringIndexData) {
-    this.DateIndexData =
-      this.IntIndexData =
-      this.LogicalIndexData =
-      this.MoneyIndexData =
-      this.MultipleKeywordData =
-      this.SingleKeywordData =
-      this.TableIndexData =
-      this.AccessMask =
-      this.DateTimeIndexData =
-        null;
-
-    this.StringIndexData = stringIndexData;
+  /**
+   * 
+   * @param dateIndexData 
+   * @param intIndexData 
+   * @param logicalIndexData 
+   * @param moneyIndexData 
+   * @param multipleKeywordData 
+   * @param singleKeywordData 
+   * @param stringIndexData 
+   * @param tableIndexData 
+   * @param accessMask Gets access mask for index data field (column) for connected user.
+   * @param dateTimeIndexData 
+   */
+  constructor(
+    dateIndexData: DateIndexData | null,
+    intIndexData: IntIndexData | null,
+    logicalIndexData: LogicalIndexData | null,
+    moneyIndexData: MoneyIndexData | null,
+    multipleKeywordData: MultipleKeywordData | null,
+    singleKeywordData: SingleKeywordData | null,
+    stringIndexData: StringIndexData | null,
+    tableIndexData: TableIndexData | null,
+    accessMask: AccessMask  | null,
+    dateTimeIndexData: DateTimeIndexData | null,
+  ) {
+    this.DateIndexData = dateIndexData;
+    this.IntIndexData = intIndexData;
+    this.LogicalIndexData = logicalIndexData;
+    this.MoneyIndexData = moneyIndexData,
+    this.MultipleKeywordData = multipleKeywordData,
+    this.SingleKeywordData = singleKeywordData
+    this.StringIndexData = stringIndexData,
+    this.TableIndexData = tableIndexData,
+    this.AccessMask = accessMask,
+    this.DateTimeIndexData = dateTimeIndexData
   }
 }
