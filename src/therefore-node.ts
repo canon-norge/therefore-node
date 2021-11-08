@@ -12,6 +12,8 @@ import { WSIndexDataItem } from './models/ws_index_data_item.js';
 import { StringIndexData } from './models/string_index_data.js';
 import { WSStreamInfoWithData } from './models/ws_stream_info_with_data.js';
 import { DocumentOperations } from './operations/document_operations.js';
+import { CategoryOperations } from './operations/category_operations.js';
+import { CaseOperations } from './operations/case_operations.js';
 class Therefore {
   url: string;
   username: string;
@@ -26,6 +28,10 @@ class Therefore {
     this.authHeader = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
     this.apiVersion = 'theservice/v0001/restun/';
   }
+
+  public getTheDocument = DocumentOperations.prototype.getDocument;
+  public closeCase = CaseOperations.prototype.closeCase;
+
 }
 
 export { Therefore };

@@ -197,6 +197,111 @@ class WSStreamInfoWithData {
     }
 }
 
+class CaseOperations {
+    async closeCase(caseNo) {
+        const body = {
+            CaseNo: caseNo,
+        };
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(body),
+        };
+        const response = await fetch(this.url + this.apiVersion + 'CloseCase', request);
+        if (response.status === 500) {
+            let body = await response.text();
+            console.error(body);
+            throw new Error('Getting Categories tree failed');
+        }
+        return;
+    }
+}
+// async createCase(theCase: TheCase): Promise<TheCase> {
+//   const body = theCase;
+//     const request = {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: this.client.authHeader,
+//       },
+//       body: JSON.stringify(body),
+//     };
+//     const response = await fetch(this.client.url + this.client.apiVersion + 'CreateCase', request);
+//     if (response.status === 500) {
+//       let body = await response.text();
+//       console.error(body);
+//       throw new Error('Getting Categories tree failed');
+//     }
+//     const data: TheCase = (await response.json()) as TheCase;
+//     return data;
+// }
+// async deleteCase(caseNo: number): Promise<void> {
+//   const body = {
+//       CaseNo: caseNo,
+//     };
+//     const request = {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: this.client.authHeader,
+//       },
+//       body: JSON.stringify(body),
+//     };
+//     const response = await fetch(this.client.url + this.client.apiVersion + 'DeleteCase', request);
+//     if (response.status === 500) {
+//       let body = await response.text();
+//       console.error(body);
+//       throw new Error('Getting Categories tree failed');
+//     }
+//     return;
+// }
+// async getCase(caseNo: number): Promise<TheCase> {
+//   const body = {
+//       CaseNo: caseNo,
+//     };
+//     const request = {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: this.client.authHeader,
+//       },
+//       body: JSON.stringify(body),
+//     };
+//     const response = await fetch(this.client.url + this.client.apiVersion + 'GetCase', request);
+//     if (response.status === 500) {
+//       let body = await response.text();
+//       console.error(body);
+//       throw new Error('Getting Categories tree failed');
+//     }
+//     const data: TheCase = (await response.json()) as TheCase;
+//     return data;
+// }
+// async getCaseDefinition(caseDeifinitionNo: number, isAccessMaskNeeded: boolean | undefined, isSearchFieldOrderNeeded?: boolean): Promise<TheCaseDefinition>{
+//   const body = {
+//       CaseDefinitionNo: caseDeifinitionNo,
+//       IsAccessMaskNeeded: isAccessMaskNeeded,
+//       IsSearchFieldOrderNeeded: isSearchFieldOrderNeeded,
+//     };
+//     const request = {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: this.client.authHeader,
+//       },
+//       body: JSON.stringify(body),
+//     };
+//     const response = await fetch(this.client.url + this.client.apiVersion + 'GetCaseDefinition', request);
+//     if (response.status === 500) {
+//       let body = await response.text();
+//       console.error(body);
+//       throw new Error('Getting Categories tree failed');
+//     }
+//     const data: TheCaseDefinition = (await response.json()) as TheCaseDefinition;
+//     return data;
+
 var Buffer = require('buffer/').Buffer;
 require('isomorphic-fetch');
 class Therefore {
@@ -212,6 +317,7 @@ class Therefore {
         this.authHeader = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
         this.apiVersion = 'theservice/v0001/restun/';
     }
+    closeCase = CaseOperations.prototype.closeCase;
 }
 
 export { CategoriesTree, CounterMode, FieldType, ItemType, StringIndexData, TheDocument, Therefore, TreeItem, WSIndexDataItem, WSStreamInfoWithData, recursiveCategoriesTreeFindCategory, recursiveCategoriesTreePrint };

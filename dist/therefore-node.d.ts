@@ -15,6 +15,7 @@ declare class Therefore {
     authHeader: string;
     apiVersion: string;
     constructor(url: string, username: string, password: string);
+    closeCase: (this: Therefore, caseNo: number) => Promise<void>;
 }
 export { Therefore };
 export { CategoriesTree };
