@@ -201,6 +201,49 @@ class WSStreamInfoWithData {
     }
 }
 
+require('isomorphic-fetch');
+class DocumentOperations {
+    async createDocument(document) {
+        console.log(`Creating Document...`);
+        const body = document;
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(body),
+        };
+        const response = await fetch(this.url + this.apiVersion + 'CreateDocument', request);
+        const data = (await response.json());
+        return data;
+    }
+    async getDocument(docNo, isCheckOutStatusNeeded, isIndexDataValuesNeeded, isStreamsInfoAndDataNeeded, isStreamsInfoNeeded, versionNo, isAccessMaskNeeded, titleHideCategory) {
+        console.log(`Getting Document...`);
+        const body = {
+            "DocNo": docNo,
+            "IsCheckOutStatusNeeded": isCheckOutStatusNeeded,
+            "IsIndexDataValuesNeeded": isIndexDataValuesNeeded,
+            "IsStreamsInfoAndDataNeeded": isStreamsInfoAndDataNeeded,
+            "IsStreamsInfoNeeded": isStreamsInfoNeeded,
+            "VersionNo": versionNo,
+            "IsAccessMaskNeeded": isAccessMaskNeeded,
+            "TitleHideCategory": titleHideCategory,
+        };
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(body),
+        };
+        const response = await fetch(this.url + this.apiVersion + 'GetDocument', request);
+        const data = (await response.json());
+        return data;
+    }
+}
+
 class CaseOperations {
     async closeCase(caseNo) {
         const body = {
@@ -321,6 +364,7 @@ class Therefore {
         this.authHeader = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
         this.apiVersion = 'theservice/v0001/restun/';
     }
+    getTheDocument = DocumentOperations.prototype.getDocument;
     closeCase = CaseOperations.prototype.closeCase;
 }
 

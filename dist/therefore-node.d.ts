@@ -15,6 +15,7 @@ declare class Therefore {
     authHeader: string;
     apiVersion: string;
     constructor(url: string, username: string, password: string);
+    getTheDocument: (this: Therefore, docNo: number, isCheckOutStatusNeeded: boolean | undefined, isIndexDataValuesNeeded: boolean | undefined, isStreamsInfoAndDataNeeded: boolean | undefined, isStreamsInfoNeeded: boolean | undefined, versionNo: number | undefined, isAccessMaskNeeded: boolean | undefined, titleHideCategory: boolean | undefined) => Promise<import("./interfaces/the_document_response.js").ITheDocumentResponse>;
     closeCase: (this: Therefore, caseNo: number) => Promise<void>;
 }
 export { Therefore };

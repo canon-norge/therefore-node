@@ -1,8 +1,8 @@
 import { ICategoryInfo } from '../interfaces/category_info';
+import { ITheDocumentResponse } from '../interfaces/the_document_response';
 import { TheDocument } from '../models/the_document';
 import { Therefore } from '../therefore-node';
 export declare class DocumentOperations {
-    client: Therefore;
-    constructor(client: Therefore);
-    createDocument(document: TheDocument): Promise<ICategoryInfo>;
+    createDocument(this: Therefore, document: TheDocument): Promise<ICategoryInfo>;
+    getDocument(this: Therefore, docNo: number, isCheckOutStatusNeeded: boolean | undefined, isIndexDataValuesNeeded: boolean | undefined, isStreamsInfoAndDataNeeded: boolean | undefined, isStreamsInfoNeeded: boolean | undefined, versionNo: number | undefined, isAccessMaskNeeded: boolean | undefined, titleHideCategory: boolean | undefined): Promise<ITheDocumentResponse>;
 }
