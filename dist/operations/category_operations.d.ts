@@ -1,9 +1,7 @@
 import { ICategoryInfo } from '../interfaces/category_info';
 import { CategoriesTree, Therefore } from '../therefore-node';
 export declare class CategoryOperations {
-    client: Therefore;
-    constructor(client: Therefore);
-    getCategoriesTree(): Promise<CategoriesTree>;
-    getCategoryNo(CategoryName: string): Promise<number | undefined>;
-    getCategoryInfo(CategoryNo: number): Promise<ICategoryInfo>;
+    getCategoriesTree(this: Therefore): Promise<CategoriesTree>;
+    getCategoryNo(this: Therefore, CategoryName: string): Promise<number | undefined>;
+    getCategoryInfo(this: Therefore, CategoryNo: number): Promise<ICategoryInfo>;
 }

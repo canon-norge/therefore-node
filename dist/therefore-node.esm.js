@@ -127,40 +127,23 @@ var FieldType;
 })(FieldType || (FieldType = {}));
 
 class WSIndexDataItem {
-    DateIndexData;
-    IntIndexData;
-    LogicalIndexData;
-    MoneyIndexData;
-    MultipleKeywordData;
-    SingleKeywordData;
-    StringIndexData;
-    TableIndexData; // ITableIndexData |
-    AccessMask; // IAccessMask |
-    DateTimeIndexData; // IDateTimeIndexData |
-    /**
-     *
-     * @param dateIndexData
-     * @param intIndexData
-     * @param logicalIndexData
-     * @param moneyIndexData
-     * @param multipleKeywordData
-     * @param singleKeywordData
-     * @param stringIndexData
-     * @param tableIndexData
-     * @param accessMask Gets access mask for index data field (column) for connected user.
-     * @param dateTimeIndexData
-     */
-    constructor(dateIndexData, intIndexData, logicalIndexData, moneyIndexData, multipleKeywordData, singleKeywordData, stringIndexData, tableIndexData, accessMask, dateTimeIndexData) {
-        this.DateIndexData = dateIndexData;
-        this.IntIndexData = intIndexData;
-        this.LogicalIndexData = logicalIndexData;
-        this.MoneyIndexData = moneyIndexData,
-            this.MultipleKeywordData = multipleKeywordData,
-            this.SingleKeywordData = singleKeywordData;
-        this.StringIndexData = stringIndexData,
-            this.TableIndexData = tableIndexData,
-            this.AccessMask = accessMask,
-            this.DateTimeIndexData = dateTimeIndexData;
+    // DateIndexData: DateIndexData | null;
+    // IntIndexData: IntIndexData | null;
+    // LogicalIndexData: LogicalIndexData | null;
+    // MoneyIndexData: MoneyIndexData | null;
+    // MultipleKeywordData: MultipleKeywordData | null;
+    // SingleKeywordData: SingleKeywordData | null;
+    // StringIndexData: StringIndexData | null;
+    // TableIndexData: TableIndexData | null; // ITableIndexData |
+    // AccessMask: AccessMask | null; // IAccessMask |
+    // DateTimeIndexData: DateTimeIndexData | null; // IDateTimeIndexData |
+    FieldNo;
+    DataValue;
+    FieldName;
+    constructor(fieldNo, dataValue, fieldName) {
+        this.FieldNo = fieldNo;
+        this.DataValue = dataValue;
+        this.FieldName = fieldName;
     }
 }
 
@@ -211,6 +194,9 @@ class DocumentOperations {
             body: JSON.stringify(body),
         };
         const response = await fetch(this.url + this.apiVersion + 'CreateDocument', request);
+        if (!response.ok) {
+            console.error(response.body);
+        }
         const data = (await response.json());
         return data;
     }
@@ -234,7 +220,109 @@ class DocumentOperations {
             },
             body: JSON.stringify(body),
         };
+        if (this.tenant != null) {
+            request.headers = { ...request.headers, ...{ 'TenantName': this.tenant } };
+        }
         const response = await fetch(this.url + this.apiVersion + 'GetDocument', request);
+        const data = (await response.json());
+        return data;
+    }
+    /**
+     *
+     * @param checkInComments
+     * The Check-in comment.
+     * @param docNo
+     * Number of the document that will be updated.
+     * @param indexData
+     * Index data items to update/add/delete a document.
+     * @param streamNosToDelete
+     * The streams to delete out of the document.
+     * @param streamsToUpdate
+     * The streams to update/add a document.
+     * @param conversionOptions
+     * Specifies options to convert the files.
+     * @param fileUploadSessions
+     * Represents list of file upload sessions to be used to store files within the document.
+     * See the UploadSessionStart and UploadSessionAppendChunk methods for more details.
+     */
+    async updateDocument(checkInComments, docNo, indexData, streamNosToDelete, streamsToUpdate, conversionOptions, fileUploadSessions) {
+        console.log(`Updating Document...`);
+        const body = {
+            "CheckInComments": checkInComments,
+            "DocNo": docNo,
+            "IndexData": indexData,
+            "StreamNosToDelete": streamNosToDelete,
+            "StreamsToUpdate": streamsToUpdate,
+            "ConversionOptions": conversionOptions,
+            "FileUploadSessions": fileUploadSessions
+        };
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(body),
+        };
+        if (this.tenant != null) {
+            request.headers = { ...request.headers, ...{ 'TenantName': this.tenant } };
+        }
+        const response = await fetch(this.url + this.apiVersion + 'UpdateDocument', request);
+        const data = (await response.json());
+        return data;
+    }
+}
+
+require('isomorphic-fetch');
+class CategoryOperations {
+    async getCategoriesTree() {
+        const body = {};
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(body),
+        };
+        console.log('Getting Categories tree...');
+        const response = await fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
+        if (response.status === 500) {
+            let body = await response.text();
+            console.error(body);
+            throw new Error('Getting Categories tree failed');
+        }
+        const data = (await response.json());
+        return data;
+    }
+    async getCategoryNo(CategoryName) {
+        let categoriesTree = await this.getCategoriesTree();
+        let resultTreeItem = recursiveCategoriesTreeFindCategory(categoriesTree, CategoryName);
+        if (resultTreeItem) {
+            return resultTreeItem.ItemNo;
+        }
+        else {
+            return undefined;
+        }
+    }
+    async getCategoryInfo(CategoryNo) {
+        const body = {
+            CategoryNo: CategoryNo,
+        };
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(body),
+        };
+        if (this.tenant != null) {
+            request.headers = { ...request.headers, ...{ 'TenantName': this.tenant } };
+        }
+        console.log(request);
+        console.log(`Getting CategoryNo. ${CategoryNo} info...`);
+        const response = await fetch(this.url + this.apiVersion + 'GetCategoryInfo', request);
         const data = (await response.json());
         return data;
     }
@@ -351,17 +439,26 @@ class Therefore {
     url;
     username;
     password;
+    tenant;
     authHeader;
     apiVersion;
-    constructor(url, username, password) {
+    constructor(url, username, password, tenant) {
         url.slice(-1) == '/' ? (this.url = url) : (this.url = url + '/');
         this.username = username;
         this.password = password;
+        this.tenant = tenant;
         this.authHeader = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
         this.apiVersion = 'theservice/v0001/restun/';
     }
-    getTheDocument = DocumentOperations.prototype.getDocument;
+    //Document Operations
+    getDocument = DocumentOperations.prototype.getDocument;
+    updateDocument = DocumentOperations.prototype.updateDocument;
+    //Case Operations
     closeCase = CaseOperations.prototype.closeCase;
+    //Category Operations
+    getCategoriesTree = CategoryOperations.prototype.getCategoriesTree;
+    getCategoryNo = CategoryOperations.prototype.getCategoryNo;
+    getCategoryInfo = CategoryOperations.prototype.getCategoryInfo;
 }
 
 export { CategoriesTree, CounterMode, FieldType, ItemType, StringIndexData, TheDocument, Therefore, TreeItem, WSIndexDataItem, WSStreamInfoWithData, recursiveCategoriesTreeFindCategory, recursiveCategoriesTreePrint };

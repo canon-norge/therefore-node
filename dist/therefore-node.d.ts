@@ -1,4 +1,5 @@
 import { CategoriesTree } from './models/categories_tree.js';
+import { ICategoryInfo } from './interfaces/category_info.js';
 import { CounterMode } from './enums/counter_mode.js';
 import { TreeItem } from './models/tree_item.js';
 import { TheDocument } from './models/the_document.js';
@@ -12,11 +13,20 @@ declare class Therefore {
     url: string;
     username: string;
     password: string;
+    tenant: string | null;
     authHeader: string;
     apiVersion: string;
-    constructor(url: string, username: string, password: string);
-    getTheDocument: (this: Therefore, docNo: number, isCheckOutStatusNeeded: boolean | undefined, isIndexDataValuesNeeded: boolean | undefined, isStreamsInfoAndDataNeeded: boolean | undefined, isStreamsInfoNeeded: boolean | undefined, versionNo: number | undefined, isAccessMaskNeeded: boolean | undefined, titleHideCategory: boolean | undefined) => Promise<import("./interfaces/the_document_response.js").ITheDocumentResponse>;
+    constructor(url: string, username: string, password: string, tenant: string | null);
+    getDocument: (this: Therefore, docNo: number, isCheckOutStatusNeeded: boolean | undefined, isIndexDataValuesNeeded: boolean | undefined, isStreamsInfoAndDataNeeded: boolean | undefined, isStreamsInfoNeeded: boolean | undefined, versionNo: number | undefined, isAccessMaskNeeded: boolean | undefined, titleHideCategory: boolean | undefined) => Promise<import("./interfaces/the_document_response.js").ITheDocumentResponse>;
+    updateDocument: (this: Therefore, checkInComments: string | null, docNo: number, indexData: {
+        IndexDataItems: WSIndexDataItem[] | null;
+        LastChangeTime: string;
+        DoFillDependentFields: boolean | null;
+    } | null, streamNosToDelete: number[], streamsToUpdate: WSStreamInfoWithData[], conversionOptions: import("./models/conversion_options.js").ConversionOptions | null, fileUploadSessions: import("./models/ws_stream_info_upload_session_data.js").WSStreamInfoUploadSessionData[] | null) => Promise<import("./interfaces/update_document_response.js").IUpdateDocumentResponse>;
     closeCase: (this: Therefore, caseNo: number) => Promise<void>;
+    getCategoriesTree: (this: Therefore) => Promise<CategoriesTree>;
+    getCategoryNo: (this: Therefore, CategoryName: string) => Promise<number | undefined>;
+    getCategoryInfo: (this: Therefore, CategoryNo: number) => Promise<ICategoryInfo>;
 }
 export { Therefore };
 export { CategoriesTree };
@@ -30,3 +40,4 @@ export { FieldType };
 export { WSIndexDataItem };
 export { StringIndexData };
 export { WSStreamInfoWithData };
+export { ICategoryInfo };
