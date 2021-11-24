@@ -1,6 +1,5 @@
 import { ICategoryInfo } from '../interfaces/category_info';
 import { ITheDocumentResponse } from '../interfaces/the_document_response';
-import { IUpdateDocumentResponse } from '../interfaces/update_document_response';
 import { ConversionOptions } from '../models/conversion_options';
 import { TheDocument } from '../models/the_document';
 import { WSIndexDataItem } from '../models/ws_index_data_item';
@@ -61,18 +60,43 @@ export class DocumentOperations {
         headers: {
           'Content-Type': 'application/json',
           Authorization: this.authHeader,
+          'TenantName': this.tenant ?? ''
         },
         body: JSON.stringify(body),
       };
-
-      if(this.tenant != null){
-        request.headers = {...request.headers, ...{'TenantName': this.tenant}}
-      }
   
       const response = await fetch(this.url + this.apiVersion + 'GetDocument', request);
       const data: ITheDocumentResponse = (await response.json()) as ITheDocumentResponse;
       return data;
     }
+
+    async getDocumentStream(
+      this: Therefore,
+      docNo: number,
+      streamNo: number,
+      versionNo?: number
+      ){
+        console.log(`Getting Document...`);
+  
+        const body = {
+          "DocNo": docNo,
+          "StreamNo": streamNo,
+          "VersionNo": versionNo
+        };
+        const request = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: this.authHeader,
+            'TenantName': this.tenant ?? ''
+          },
+          body: JSON.stringify(body),
+        };
+    
+        const response = await fetch(this.url + this.apiVersion + 'GetDocumentStream', request);
+        const data: WSStreamInfoWithData = (await response.json());
+        return data;
+      }
 
   /**
    * 
@@ -92,46 +116,46 @@ export class DocumentOperations {
    * Represents list of file upload sessions to be used to store files within the document.
    * See the UploadSessionStart and UploadSessionAppendChunk methods for more details.
    */
-  async updateDocument(
-    this: Therefore,
-    checkInComments: string | null,
-    docNo: number,
-    indexData: {
-      IndexDataItems: WSIndexDataItem[] | null,
-      LastChangeTime: string,
-      DoFillDependentFields: boolean | null
-    } | null,
-    streamNosToDelete: number[],
-    streamsToUpdate: WSStreamInfoWithData[],
-    conversionOptions: ConversionOptions | null,
-    fileUploadSessions: WSStreamInfoUploadSessionData[] | null,
-  ){
-    console.log(`Updating Document...`);
+  // async updateDocument(
+  //   this: Therefore,
+  //   checkInComments: string | null,
+  //   docNo: number,
+  //   indexData: {
+  //     IndexDataItems: WSIndexDataItem[] | null,
+  //     LastChangeTime: string,
+  //     DoFillDependentFields: boolean | null
+  //   } | null,
+  //   streamNosToDelete: number[],
+  //   streamsToUpdate: WSStreamInfoWithData[],
+  //   conversionOptions: ConversionOptions | null,
+  //   fileUploadSessions: WSStreamInfoUploadSessionData[] | null,
+  // ){
+  //   console.log(`Updating Document...`);
 
-      const body = {
-        "CheckInComments": checkInComments,
-        "DocNo": docNo,
-        "IndexData": indexData,
-        "StreamNosToDelete": streamNosToDelete,
-        "StreamsToUpdate": streamsToUpdate,
-        "ConversionOptions": conversionOptions,
-        "FileUploadSessions": fileUploadSessions
-      };
-      const request = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: this.authHeader,
-        },
-        body: JSON.stringify(body),
-      };
+  //     const body = {
+  //       "CheckInComments": checkInComments,
+  //       "DocNo": docNo,
+  //       "IndexData": indexData,
+  //       "StreamNosToDelete": streamNosToDelete,
+  //       "StreamsToUpdate": streamsToUpdate,
+  //       "ConversionOptions": conversionOptions,
+  //       "FileUploadSessions": fileUploadSessions
+  //     };
+  //     const request = {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: this.authHeader,
+  //       },
+  //       body: JSON.stringify(body),
+  //     };
 
-      if(this.tenant != null){
-        request.headers = {...request.headers, ...{'TenantName': this.tenant}}
-      }
+  //     if(this.tenant != null){
+  //       request.headers = {...request.headers, ...{'TenantName': this.tenant}}
+  //     }
   
-      const response = await fetch(this.url + this.apiVersion + 'UpdateDocument', request);
-      const data: IUpdateDocumentResponse = (await response.json()) as IUpdateDocumentResponse;
-      return data;
-  }
+  //     const response = await fetch(this.url + this.apiVersion + 'UpdateDocument', request);
+  //     const data: IUpdateDocumentResponse = (await response.json()) as IUpdateDocumentResponse;
+  //     return data;
+  // }
 }

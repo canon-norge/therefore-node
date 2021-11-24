@@ -1,20 +1,22 @@
 import { ICategoryInfo } from '../interfaces/category_info';
-import { CategoriesTree, recursiveCategoriesTreeFindCategory, Therefore, TreeItem } from '../therefore-node';
+import { CategoriesTree, Therefore, TreeItem } from '../therefore-node';
 
 require('isomorphic-fetch');
 
 export class CategoryOperations {
 
   async getCategoriesTree(this: Therefore): Promise<CategoriesTree> {
-    const body = {};
     const request = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: this.authHeader,
       },
-      body: JSON.stringify(body),
     };
+
+    if(this.tenant != null){
+      request.headers = {...request.headers, ...{'TenantName': this.tenant}}
+    }
     
     console.log('Getting Categories tree...');
     const response = await fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
@@ -27,17 +29,17 @@ export class CategoryOperations {
     return data;
   }
 
-  async getCategoryNo(this: Therefore, CategoryName: string): Promise<number | undefined> {
-    let categoriesTree = await this.getCategoriesTree();
-    let results: number[] = [];
+  // async getCategoryNo(this: Therefore, CategoryName: string): Promise<number | undefined> {
+  //   let categoriesTree = await this.getCategoriesTree();
+  //   let results: number[] = [];
 
-    let resultTreeItem: TreeItem | undefined = recursiveCategoriesTreeFindCategory(categoriesTree, CategoryName);
-    if(resultTreeItem){
-        return resultTreeItem.ItemNo
-    } else {
-        return undefined
-    }
-  }
+  //   let resultTreeItem: TreeItem | undefined = recursiveCategoriesTreeFindCategory(categoriesTree, CategoryName);
+  //   if(resultTreeItem){
+  //       return resultTreeItem.ItemNo
+  //   } else {
+  //       return undefined
+  //   }
+  // }
 
   async getCategoryInfo(this: Therefore, CategoryNo: number): Promise<ICategoryInfo> {
     const body = {
@@ -55,6 +57,7 @@ export class CategoryOperations {
     if(this.tenant != null){
       request.headers = {...request.headers, ...{'TenantName': this.tenant}}
     }
+
     console.log(request)
     console.log(`Getting CategoryNo. ${CategoryNo} info...`);
     const response = await fetch(this.url + this.apiVersion + 'GetCategoryInfo', request);

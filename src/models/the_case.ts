@@ -5,7 +5,7 @@ export class TheCase implements ITheCase{
     CaseDefNo: number;
     IndexDataItems: WSIndexDataItem[] | null;
     DoFillDependentFields: boolean | null;
-    constructor(caseDefNo: number, indexDataItems: WSIndexDataItem[] | null, doFillDependentFields: boolean | null){
+    constructor(caseDefNo: number, indexDataItems: any[] | null, doFillDependentFields: boolean | null){
         this.CaseDefNo = caseDefNo,
         this.IndexDataItems = indexDataItems,
         this.DoFillDependentFields = doFillDependentFields

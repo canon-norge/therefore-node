@@ -92,30 +92,6 @@ exports.ItemType = void 0;
     ItemType[ItemType["CaseDefinition"] = 3] = "CaseDefinition";
 })(exports.ItemType || (exports.ItemType = {}));
 
-const recursiveCategoriesTreePrint = (categoriesTree) => {
-    categoriesTree.TreeItems.forEach((treeItem) => recursiveTreeItemPrint(treeItem));
-};
-const recursiveTreeItemPrint = (treeItem) => {
-    console.log(`ItemName: ${treeItem.Name}, ItemType: ${exports.ItemType[treeItem.ItemType]}`);
-    if (treeItem.ChildItems.length > 0)
-        treeItem.ChildItems.forEach((childItem) => recursiveTreeItemPrint(childItem));
-};
-const recursiveCategoriesTreeFindCategory = (categoriesTree, categoryName) => {
-    let result;
-    const setResult = (treeItem) => (result = treeItem);
-    categoriesTree.TreeItems.forEach((treeItem) => recursiveTreeItemPrintFindCategory(treeItem, categoryName, setResult));
-    return result;
-};
-const recursiveTreeItemPrintFindCategory = (treeItem, categoryName, callback) => {
-    let categoryFound = false;
-    if (treeItem.Name === categoryName && treeItem.ItemType === exports.ItemType.Category) {
-        callback(treeItem);
-        categoryFound = true;
-    }
-    if (!categoryFound && treeItem.ChildItems.length > 0)
-        treeItem.ChildItems.forEach((childItem) => recursiveTreeItemPrintFindCategory(childItem, categoryName, callback));
-};
-
 exports.FieldType = void 0;
 (function (FieldType) {
     FieldType[FieldType["StringField"] = 1] = "StringField";
@@ -131,23 +107,40 @@ exports.FieldType = void 0;
 })(exports.FieldType || (exports.FieldType = {}));
 
 class WSIndexDataItem {
-    // DateIndexData: DateIndexData | null;
-    // IntIndexData: IntIndexData | null;
-    // LogicalIndexData: LogicalIndexData | null;
-    // MoneyIndexData: MoneyIndexData | null;
-    // MultipleKeywordData: MultipleKeywordData | null;
-    // SingleKeywordData: SingleKeywordData | null;
-    // StringIndexData: StringIndexData | null;
-    // TableIndexData: TableIndexData | null; // ITableIndexData |
-    // AccessMask: AccessMask | null; // IAccessMask |
-    // DateTimeIndexData: DateTimeIndexData | null; // IDateTimeIndexData |
-    FieldNo;
-    DataValue;
-    FieldName;
-    constructor(fieldNo, dataValue, fieldName) {
-        this.FieldNo = fieldNo;
-        this.DataValue = dataValue;
-        this.FieldName = fieldName;
+    DateIndexData;
+    IntIndexData;
+    LogicalIndexData;
+    MoneyIndexData;
+    MultipleKeywordData;
+    SingleKeywordData;
+    StringIndexData;
+    TableIndexData; // ITableIndexData |
+    AccessMask; // IAccessMask |
+    DateTimeIndexData; // IDateTimeIndexData |
+    /**
+     *
+     * @param dateIndexData
+     * @param intIndexData
+     * @param logicalIndexData
+     * @param moneyIndexData
+     * @param multipleKeywordData
+     * @param singleKeywordData
+     * @param stringIndexData
+     * @param tableIndexData
+     * @param accessMask Gets access mask for index data field (column) for connected user.
+     * @param dateTimeIndexData
+     */
+    constructor(dateIndexData, intIndexData, logicalIndexData, moneyIndexData, multipleKeywordData, singleKeywordData, stringIndexData, tableIndexData, accessMask, dateTimeIndexData) {
+        this.DateIndexData = dateIndexData;
+        this.IntIndexData = intIndexData;
+        this.LogicalIndexData = logicalIndexData;
+        this.MoneyIndexData = moneyIndexData,
+            this.MultipleKeywordData = multipleKeywordData,
+            this.SingleKeywordData = singleKeywordData;
+        this.StringIndexData = stringIndexData,
+            this.TableIndexData = tableIndexData,
+            this.AccessMask = accessMask,
+            this.DateTimeIndexData = dateTimeIndexData;
     }
 }
 
@@ -221,112 +214,31 @@ class DocumentOperations {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: this.authHeader,
+                'TenantName': this.tenant ?? ''
             },
             body: JSON.stringify(body),
         };
-        if (this.tenant != null) {
-            request.headers = { ...request.headers, ...{ 'TenantName': this.tenant } };
-        }
         const response = await fetch(this.url + this.apiVersion + 'GetDocument', request);
         const data = (await response.json());
         return data;
     }
-    /**
-     *
-     * @param checkInComments
-     * The Check-in comment.
-     * @param docNo
-     * Number of the document that will be updated.
-     * @param indexData
-     * Index data items to update/add/delete a document.
-     * @param streamNosToDelete
-     * The streams to delete out of the document.
-     * @param streamsToUpdate
-     * The streams to update/add a document.
-     * @param conversionOptions
-     * Specifies options to convert the files.
-     * @param fileUploadSessions
-     * Represents list of file upload sessions to be used to store files within the document.
-     * See the UploadSessionStart and UploadSessionAppendChunk methods for more details.
-     */
-    async updateDocument(checkInComments, docNo, indexData, streamNosToDelete, streamsToUpdate, conversionOptions, fileUploadSessions) {
-        console.log(`Updating Document...`);
+    async getDocumentStream(docNo, streamNo, versionNo) {
+        console.log(`Getting Document...`);
         const body = {
-            "CheckInComments": checkInComments,
             "DocNo": docNo,
-            "IndexData": indexData,
-            "StreamNosToDelete": streamNosToDelete,
-            "StreamsToUpdate": streamsToUpdate,
-            "ConversionOptions": conversionOptions,
-            "FileUploadSessions": fileUploadSessions
+            "StreamNo": streamNo,
+            "VersionNo": versionNo
         };
         const request = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: this.authHeader,
+                'TenantName': this.tenant ?? ''
             },
             body: JSON.stringify(body),
         };
-        if (this.tenant != null) {
-            request.headers = { ...request.headers, ...{ 'TenantName': this.tenant } };
-        }
-        const response = await fetch(this.url + this.apiVersion + 'UpdateDocument', request);
-        const data = (await response.json());
-        return data;
-    }
-}
-
-require('isomorphic-fetch');
-class CategoryOperations {
-    async getCategoriesTree() {
-        const body = {};
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.authHeader,
-            },
-            body: JSON.stringify(body),
-        };
-        console.log('Getting Categories tree...');
-        const response = await fetch(this.url + this.apiVersion + 'GetCategoriesTree', request);
-        if (response.status === 500) {
-            let body = await response.text();
-            console.error(body);
-            throw new Error('Getting Categories tree failed');
-        }
-        const data = (await response.json());
-        return data;
-    }
-    async getCategoryNo(CategoryName) {
-        let categoriesTree = await this.getCategoriesTree();
-        let resultTreeItem = recursiveCategoriesTreeFindCategory(categoriesTree, CategoryName);
-        if (resultTreeItem) {
-            return resultTreeItem.ItemNo;
-        }
-        else {
-            return undefined;
-        }
-    }
-    async getCategoryInfo(CategoryNo) {
-        const body = {
-            CategoryNo: CategoryNo,
-        };
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.authHeader,
-            },
-            body: JSON.stringify(body),
-        };
-        if (this.tenant != null) {
-            request.headers = { ...request.headers, ...{ 'TenantName': this.tenant } };
-        }
-        console.log(request);
-        console.log(`Getting CategoryNo. ${CategoryNo} info...`);
-        const response = await fetch(this.url + this.apiVersion + 'GetCategoryInfo', request);
+        const response = await fetch(this.url + this.apiVersion + 'GetDocumentStream', request);
         const data = (await response.json());
         return data;
     }
@@ -345,6 +257,9 @@ class CaseOperations {
             },
             body: JSON.stringify(body),
         };
+        if (this.tenant != null) {
+            request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
+        }
         const response = await fetch(this.url + this.apiVersion + 'CloseCase', request);
         if (response.status === 500) {
             let body = await response.text();
@@ -353,26 +268,58 @@ class CaseOperations {
         }
         return;
     }
+    async createCase(theCase) {
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(theCase),
+        };
+        if (this.tenant != null) {
+            request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
+        }
+        const response = await fetch(this.url + this.apiVersion + 'CreateCase', request);
+        if (response.status === 500) {
+            let body = await response.text();
+            console.error(body);
+            throw new Error('Creating new case failed');
+        }
+        const data = (await response.json());
+        return data;
+    }
+    async updateCase(theCase) {
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify(theCase),
+        };
+        if (this.tenant != null) {
+            request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
+        }
+        const response = await fetch(this.url + this.apiVersion + 'CreateCase', request);
+        return response.json();
+    }
+    async getCaseDefinition(caseDefinitionNo) {
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+            body: JSON.stringify({ "CaseDefinitionNo": caseDefinitionNo }),
+        };
+        if (this.tenant != null) {
+            request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
+        }
+        const response = await fetch(this.url + this.apiVersion + 'GetCaseDefinition', request);
+        return response.json();
+    }
 }
-// async createCase(theCase: TheCase): Promise<TheCase> {
-//   const body = theCase;
-//     const request = {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: this.client.authHeader,
-//       },
-//       body: JSON.stringify(body),
-//     };
-//     const response = await fetch(this.client.url + this.client.apiVersion + 'CreateCase', request);
-//     if (response.status === 500) {
-//       let body = await response.text();
-//       console.error(body);
-//       throw new Error('Getting Categories tree failed');
-//     }
-//     const data: TheCase = (await response.json()) as TheCase;
-//     return data;
-// }
 // async deleteCase(caseNo: number): Promise<void> {
 //   const body = {
 //       CaseNo: caseNo,
@@ -437,40 +384,45 @@ class CaseOperations {
 //     const data: TheCaseDefinition = (await response.json()) as TheCaseDefinition;
 //     return data;
 
+class TheCase {
+    CaseDefNo;
+    IndexDataItems;
+    DoFillDependentFields;
+    constructor(caseDefNo, indexDataItems, doFillDependentFields) {
+        this.CaseDefNo = caseDefNo,
+            this.IndexDataItems = indexDataItems,
+            this.DoFillDependentFields = doFillDependentFields;
+    }
+}
+
 var Buffer = require('buffer/').Buffer;
 require('isomorphic-fetch');
 class Therefore {
     url;
     username;
     password;
-    tenant;
     authHeader;
     apiVersion;
+    tenant;
     constructor(url, username, password, tenant) {
         url.slice(-1) == '/' ? (this.url = url) : (this.url = url + '/');
         this.username = username;
         this.password = password;
-        this.tenant = tenant;
         this.authHeader = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
         this.apiVersion = 'theservice/v0001/restun/';
+        this.tenant = tenant;
     }
-    //Document Operations
     getDocument = DocumentOperations.prototype.getDocument;
-    updateDocument = DocumentOperations.prototype.updateDocument;
-    //Case Operations
-    closeCase = CaseOperations.prototype.closeCase;
-    //Category Operations
-    getCategoriesTree = CategoryOperations.prototype.getCategoriesTree;
-    getCategoryNo = CategoryOperations.prototype.getCategoryNo;
-    getCategoryInfo = CategoryOperations.prototype.getCategoryInfo;
+    getDocumentStream = DocumentOperations.prototype.getDocumentStream;
+    getCaseDefinition = CaseOperations.prototype.getCaseDefinition;
+    createCase = CaseOperations.prototype.createCase;
 }
 
 exports.CategoriesTree = CategoriesTree;
 exports.StringIndexData = StringIndexData;
+exports.TheCase = TheCase;
 exports.TheDocument = TheDocument;
 exports.Therefore = Therefore;
 exports.TreeItem = TreeItem;
 exports.WSIndexDataItem = WSIndexDataItem;
 exports.WSStreamInfoWithData = WSStreamInfoWithData;
-exports.recursiveCategoriesTreeFindCategory = recursiveCategoriesTreeFindCategory;
-exports.recursiveCategoriesTreePrint = recursiveCategoriesTreePrint;

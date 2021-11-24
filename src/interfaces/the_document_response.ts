@@ -7,6 +7,6 @@ export interface ITheDocumentResponse {
     CheckOutStatus: ICheckOutStatus | null,
     DocNo: number | undefined,
     IndexData: IIndexData | null,
-    StreamsInfo: IWSStreamInfo,
+    StreamsInfo: IWSStreamInfo[],
     RoleAccessMask: RoleAccessMask | undefined
 }
