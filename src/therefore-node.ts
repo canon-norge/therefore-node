@@ -20,9 +20,9 @@ class Therefore {
   password: string;
   authHeader: string;
   apiVersion: string;
-  tenant: string | null;
+  tenant?: string;
 
-  constructor(url: string, username: string, password: string, tenant: string | null) {
+  constructor(url: string, username: string, password: string, tenant?: string) {
     url.slice(-1) == '/' ? (this.url = url) : (this.url = url + '/');
     this.username = username;
     this.password = password;

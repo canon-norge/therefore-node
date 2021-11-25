@@ -32,6 +32,19 @@ export class DocumentOperations {
     return data;
   }
 
+  /**
+   * Retrieves document by DocNo from Therefore
+   * @param this ThereforeClient
+   * @param docNo Document Number for document to be retrieved
+   * @param isCheckOutStatusNeeded 
+   * @param isIndexDataValuesNeeded Get Category IndexData 
+   * @param isStreamsInfoAndDataNeeded Get Streams info and files
+   * @param isStreamsInfoNeeded Get Streams info only
+   * @param versionNo Specify which document version to get
+   * @param isAccessMaskNeeded 
+   * @param titleHideCategory 
+   * @returns TheDocument
+   */
   async getDocument(
     this: Therefore, 
     docNo: number, 
