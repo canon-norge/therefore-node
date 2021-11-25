@@ -14,8 +14,8 @@ declare class Therefore {
     password: string;
     authHeader: string;
     apiVersion: string;
-    tenant: string | null;
-    constructor(url: string, username: string, password: string, tenant: string | null);
+    tenant?: string;
+    constructor(url: string, username: string, password: string, tenant?: string);
     getDocument: (this: Therefore, docNo: number, isCheckOutStatusNeeded: boolean | undefined, isIndexDataValuesNeeded: boolean | undefined, isStreamsInfoAndDataNeeded: boolean | undefined, isStreamsInfoNeeded: boolean | undefined, versionNo: number | undefined, isAccessMaskNeeded: boolean | undefined, titleHideCategory: boolean | undefined) => Promise<import("./interfaces/the_document_response.js").ITheDocumentResponse>;
     getDocumentStream: (this: Therefore, docNo: number, streamNo: number, versionNo?: number | undefined) => Promise<WSStreamInfoWithData>;
     getCaseDefinition: (this: Therefore, caseDefinitionNo: number) => Promise<TheCase>;
