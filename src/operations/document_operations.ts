@@ -5,6 +5,7 @@ import { TheDocument } from '../models/the_document';
 import { WSIndexDataItem } from '../models/ws_index_data_item';
 import { WSStreamInfoUploadSessionData } from '../models/ws_stream_info_upload_session_data';
 import { WSStreamInfoWithData } from '../models/ws_stream_info_with_data';
+import { WebApi } from '../services/web_api.service';
 import { Therefore } from '../therefore-node';
 
 require('isomorphic-fetch');
@@ -20,6 +21,7 @@ export class DocumentOperations {
       headers: {
         'Content-Type': 'application/json',
         Authorization: this.authHeader,
+        'TenantName': this.tenant ?? ''
       },
       body: JSON.stringify(body),
     };
@@ -48,14 +50,14 @@ export class DocumentOperations {
   async getDocument(
     this: Therefore, 
     docNo: number, 
-    isCheckOutStatusNeeded: boolean | undefined,
-    isIndexDataValuesNeeded: boolean | undefined,
-    isStreamsInfoAndDataNeeded: boolean | undefined,
-    isStreamsInfoNeeded: boolean | undefined,
-    versionNo: number | undefined,
-    isAccessMaskNeeded: boolean | undefined,
-    titleHideCategory: boolean | undefined
-    ){
+    isCheckOutStatusNeeded?: boolean,
+    isIndexDataValuesNeeded?: boolean,
+    isStreamsInfoAndDataNeeded?: boolean,
+    isStreamsInfoNeeded?: boolean,
+    versionNo?: number,
+    isAccessMaskNeeded?: boolean,
+    titleHideCategory?: boolean
+    ): Promise<TheDocument>{
       console.log(`Getting Document...`);
 
       const body = {
@@ -68,18 +70,9 @@ export class DocumentOperations {
         "IsAccessMaskNeeded": isAccessMaskNeeded,
         "TitleHideCategory": titleHideCategory,
       };
-      const request = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: this.authHeader,
-          'TenantName': this.tenant ?? ''
-        },
-        body: JSON.stringify(body),
-      };
-  
-      const response = await fetch(this.url + this.apiVersion + 'GetDocument', request);
-      const data: ITheDocumentResponse = (await response.json()) as ITheDocumentResponse;
+      
+      const data = await WebApi.prototype.post.call(this,'GetDocument', body)
+
       return data;
     }
 
@@ -88,87 +81,17 @@ export class DocumentOperations {
       docNo: number,
       streamNo: number,
       versionNo?: number
-      ){
-        console.log(`Getting Document...`);
+      ): Promise<WSStreamInfoWithData>{
+        console.log(`Getting Document Stream...`);
   
         const body = {
           "DocNo": docNo,
           "StreamNo": streamNo,
           "VersionNo": versionNo
         };
-        const request = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: this.authHeader,
-            'TenantName': this.tenant ?? ''
-          },
-          body: JSON.stringify(body),
-        };
-    
-        const response = await fetch(this.url + this.apiVersion + 'GetDocumentStream', request);
-        const data: WSStreamInfoWithData = (await response.json());
+
+        const data = await WebApi.prototype.post.call(this,'GetDocumentStream', body)
+
         return data;
       }
-
-  /**
-   * 
-   * @param checkInComments
-   * The Check-in comment.
-   * @param docNo
-   * Number of the document that will be updated.
-   * @param indexData
-   * Index data items to update/add/delete a document.
-   * @param streamNosToDelete
-   * The streams to delete out of the document.
-   * @param streamsToUpdate
-   * The streams to update/add a document.
-   * @param conversionOptions
-   * Specifies options to convert the files.
-   * @param fileUploadSessions
-   * Represents list of file upload sessions to be used to store files within the document.
-   * See the UploadSessionStart and UploadSessionAppendChunk methods for more details.
-   */
-  // async updateDocument(
-  //   this: Therefore,
-  //   checkInComments: string | null,
-  //   docNo: number,
-  //   indexData: {
-  //     IndexDataItems: WSIndexDataItem[] | null,
-  //     LastChangeTime: string,
-  //     DoFillDependentFields: boolean | null
-  //   } | null,
-  //   streamNosToDelete: number[],
-  //   streamsToUpdate: WSStreamInfoWithData[],
-  //   conversionOptions: ConversionOptions | null,
-  //   fileUploadSessions: WSStreamInfoUploadSessionData[] | null,
-  // ){
-  //   console.log(`Updating Document...`);
-
-  //     const body = {
-  //       "CheckInComments": checkInComments,
-  //       "DocNo": docNo,
-  //       "IndexData": indexData,
-  //       "StreamNosToDelete": streamNosToDelete,
-  //       "StreamsToUpdate": streamsToUpdate,
-  //       "ConversionOptions": conversionOptions,
-  //       "FileUploadSessions": fileUploadSessions
-  //     };
-  //     const request = {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: this.authHeader,
-  //       },
-  //       body: JSON.stringify(body),
-  //     };
-
-  //     if(this.tenant != null){
-  //       request.headers = {...request.headers, ...{'TenantName': this.tenant}}
-  //     }
-  
-  //     const response = await fetch(this.url + this.apiVersion + 'UpdateDocument', request);
-  //     const data: IUpdateDocumentResponse = (await response.json()) as IUpdateDocumentResponse;
-  //     return data;
-  // }
 }

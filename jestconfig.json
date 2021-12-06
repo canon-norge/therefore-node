@@ -3,6 +3,7 @@
   "verbose": true,
   "transform": {},
   "extensionsToTreatAsEsm": [
-    ".ts"
+    ".ts",
+    ".esm.js"
   ]
 }

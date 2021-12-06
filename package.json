@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "ts-node test/test.ts",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "pretest": "npm run build"
   },
   "author": "Marensius Bae Pettersen",

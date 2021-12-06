@@ -173,6 +173,32 @@ class WSStreamInfoWithData {
     }
 }
 
+class WebApi {
+    async post(endPoint, body) {
+        let request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.authHeader,
+            },
+        };
+        if (body) {
+            request = { ...request, ...{ body: JSON.stringify(body) } };
+        }
+        if (this.tenant) {
+            request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
+        }
+        console.log(request);
+        const response = await fetch(this.url + this.apiVersion + endPoint, request);
+        if (response.status === 500) {
+            let body = await response.text();
+            console.error(body);
+            throw new Error(`POST ${endPoint} failed`);
+        }
+        return response.json();
+    }
+}
+
 require('isomorphic-fetch');
 class DocumentOperations {
     async createDocument(document) {
@@ -183,6 +209,7 @@ class DocumentOperations {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: this.authHeader,
+                'TenantName': this.tenant ?? ''
             },
             body: JSON.stringify(body),
         };
@@ -218,37 +245,61 @@ class DocumentOperations {
             "IsAccessMaskNeeded": isAccessMaskNeeded,
             "TitleHideCategory": titleHideCategory,
         };
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.authHeader,
-                'TenantName': this.tenant ?? ''
-            },
-            body: JSON.stringify(body),
-        };
-        const response = await fetch(this.url + this.apiVersion + 'GetDocument', request);
-        const data = (await response.json());
+        const data = await WebApi.prototype.post.call(this, 'GetDocument', body);
         return data;
     }
     async getDocumentStream(docNo, streamNo, versionNo) {
-        console.log(`Getting Document...`);
+        console.log(`Getting Document Stream...`);
         const body = {
             "DocNo": docNo,
             "StreamNo": streamNo,
             "VersionNo": versionNo
         };
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.authHeader,
-                'TenantName': this.tenant ?? ''
-            },
-            body: JSON.stringify(body),
+        const data = await WebApi.prototype.post.call(this, 'GetDocumentStream', body);
+        return data;
+    }
+}
+
+const recursiveCategoriesTreeFindCategory = (categoriesTree, categoryName) => {
+    let result;
+    const setResult = (treeItem) => (result = treeItem);
+    categoriesTree.TreeItems.forEach((treeItem) => recursiveTreeItemPrintFindCategory(treeItem, categoryName, setResult));
+    return result;
+};
+const recursiveTreeItemPrintFindCategory = (treeItem, categoryName, callback) => {
+    let categoryFound = false;
+    if (treeItem.Name === categoryName && treeItem.ItemType === ItemType.Category) {
+        callback(treeItem);
+        categoryFound = true;
+    }
+    if (!categoryFound && treeItem.ChildItems.length > 0)
+        treeItem.ChildItems.forEach((childItem) => recursiveTreeItemPrintFindCategory(childItem, categoryName, callback));
+};
+
+require('isomorphic-fetch');
+class CategoryOperations {
+    async getCategoriesTree() {
+        console.log('Getting Categories Tree');
+        const data = await WebApi.prototype.post.call(this, 'GetCategoriesTree', {});
+        return data;
+    }
+    async getCategoryNo(CategoryName) {
+        console.log('Getting Category No');
+        let categoriesTree = await CategoryOperations.prototype.getCategoriesTree.call(this);
+        let resultTreeItem = recursiveCategoriesTreeFindCategory(categoriesTree, CategoryName);
+        if (resultTreeItem) {
+            return resultTreeItem.ItemNo;
+        }
+        else {
+            return undefined;
+        }
+    }
+    async getCategoryInfo(CategoryNo) {
+        console.log('Getting Category Info');
+        const body = {
+            CategoryNo: CategoryNo,
         };
-        const response = await fetch(this.url + this.apiVersion + 'GetDocumentStream', request);
-        const data = (await response.json());
+        const data = await WebApi.prototype.post.call(this, 'GetCategoryInfo', body);
         return data;
     }
 }
@@ -278,120 +329,49 @@ class CaseOperations {
         return;
     }
     async createCase(theCase) {
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.authHeader,
-            },
-            body: JSON.stringify(theCase),
-        };
-        if (this.tenant != null) {
-            request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
-        }
-        const response = await fetch(this.url + this.apiVersion + 'CreateCase', request);
-        if (response.status === 500) {
-            let body = await response.text();
-            console.error(body);
-            throw new Error('Creating new case failed');
-        }
-        const data = (await response.json());
+        console.log('Creating Case...');
+        const data = await WebApi.prototype.post.call(this, 'CreateCase', theCase);
         return data;
     }
     async updateCase(theCase) {
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.authHeader,
-            },
-            body: JSON.stringify(theCase),
-        };
-        if (this.tenant != null) {
-            request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
-        }
-        const response = await fetch(this.url + this.apiVersion + 'CreateCase', request);
-        return response.json();
+        console.log('Updating Case...');
+        const data = await WebApi.prototype.post.call(this, 'SaveCaseIndexData', theCase);
+        return data;
     }
     async getCaseDefinition(caseDefinitionNo) {
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: this.authHeader,
-            },
-            body: JSON.stringify({ "CaseDefinitionNo": caseDefinitionNo }),
+        console.log('Getting CaseDefinition...');
+        const body = {
+            CaseDefinitionNo: caseDefinitionNo
         };
-        if (this.tenant != null) {
-            request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
-        }
-        const response = await fetch(this.url + this.apiVersion + 'GetCaseDefinition', request);
-        return response.json();
+        const data = await WebApi.prototype.post.call(this, 'GetCaseDefinition', body);
+        return data;
+    }
+    async deleteCase(caseNo) {
+        console.log('Deleting Case...');
+        const body = {
+            CaseNo: caseNo,
+        };
+        await WebApi.prototype.post.call(this, 'DeleteCase', body);
+        return;
+    }
+    async getCase(caseNo) {
+        console.log('Getting Case...');
+        const body = {
+            CaseNo: caseNo,
+        };
+        const data = await WebApi.prototype.post.call(this, 'GetCase', body);
+        return data;
+    }
+    async getCaseDocuments(CaseNo, CategoryNo) {
+        console.log('Getting Case Documents');
+        const body = {
+            CaseNo: CaseNo,
+            CategoryNo: CategoryNo
+        };
+        const data = await WebApi.prototype.post.call(this, 'GetCaseDocuments', body);
+        return data;
     }
 }
-// async deleteCase(caseNo: number): Promise<void> {
-//   const body = {
-//       CaseNo: caseNo,
-//     };
-//     const request = {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: this.client.authHeader,
-//       },
-//       body: JSON.stringify(body),
-//     };
-//     const response = await fetch(this.client.url + this.client.apiVersion + 'DeleteCase', request);
-//     if (response.status === 500) {
-//       let body = await response.text();
-//       console.error(body);
-//       throw new Error('Getting Categories tree failed');
-//     }
-//     return;
-// }
-// async getCase(caseNo: number): Promise<TheCase> {
-//   const body = {
-//       CaseNo: caseNo,
-//     };
-//     const request = {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: this.client.authHeader,
-//       },
-//       body: JSON.stringify(body),
-//     };
-//     const response = await fetch(this.client.url + this.client.apiVersion + 'GetCase', request);
-//     if (response.status === 500) {
-//       let body = await response.text();
-//       console.error(body);
-//       throw new Error('Getting Categories tree failed');
-//     }
-//     const data: TheCase = (await response.json()) as TheCase;
-//     return data;
-// }
-// async getCaseDefinition(caseDeifinitionNo: number, isAccessMaskNeeded: boolean | undefined, isSearchFieldOrderNeeded?: boolean): Promise<TheCaseDefinition>{
-//   const body = {
-//       CaseDefinitionNo: caseDeifinitionNo,
-//       IsAccessMaskNeeded: isAccessMaskNeeded,
-//       IsSearchFieldOrderNeeded: isSearchFieldOrderNeeded,
-//     };
-//     const request = {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: this.client.authHeader,
-//       },
-//       body: JSON.stringify(body),
-//     };
-//     const response = await fetch(this.client.url + this.client.apiVersion + 'GetCaseDefinition', request);
-//     if (response.status === 500) {
-//       let body = await response.text();
-//       console.error(body);
-//       throw new Error('Getting Categories tree failed');
-//     }
-//     const data: TheCaseDefinition = (await response.json()) as TheCaseDefinition;
-//     return data;
 
 class TheCase {
     CaseDefNo;
@@ -421,10 +401,22 @@ class Therefore {
         this.apiVersion = 'theservice/v0001/restun/';
         this.tenant = tenant;
     }
+    //Document operations
     getDocument = DocumentOperations.prototype.getDocument;
     getDocumentStream = DocumentOperations.prototype.getDocumentStream;
+    //Case Operations
     getCaseDefinition = CaseOperations.prototype.getCaseDefinition;
     createCase = CaseOperations.prototype.createCase;
+    closeCase = CaseOperations.prototype.closeCase;
+    updateCase = CaseOperations.prototype.updateCase;
+    deleteCase = CaseOperations.prototype.deleteCase;
+    getCase = CaseOperations.prototype.getCase;
+    getCaseDocuments = CaseOperations.prototype.getCaseDocuments;
+    //Category Operations
+    getCategoriesTree = CategoryOperations.prototype.getCategoriesTree;
+    getCategoryNo = CategoryOperations.prototype.getCategoryNo;
+    getCategoryInfo = CategoryOperations.prototype.getCategoryInfo;
 }
 
 export { CategoriesTree, CounterMode, FieldType, ItemType, StringIndexData, TheCase, TheDocument, Therefore, TreeItem, WSIndexDataItem, WSStreamInfoWithData };
+//# sourceMappingURL=therefore-node.esm.js.map

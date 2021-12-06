@@ -1,5 +1,4 @@
 import { ICategoryInfo } from '../interfaces/category_info';
-import { ITheDocumentResponse } from '../interfaces/the_document_response';
 import { TheDocument } from '../models/the_document';
 import { WSStreamInfoWithData } from '../models/ws_stream_info_with_data';
 import { Therefore } from '../therefore-node';
@@ -18,6 +17,6 @@ export declare class DocumentOperations {
      * @param titleHideCategory
      * @returns TheDocument
      */
-    getDocument(this: Therefore, docNo: number, isCheckOutStatusNeeded: boolean | undefined, isIndexDataValuesNeeded: boolean | undefined, isStreamsInfoAndDataNeeded: boolean | undefined, isStreamsInfoNeeded: boolean | undefined, versionNo: number | undefined, isAccessMaskNeeded: boolean | undefined, titleHideCategory: boolean | undefined): Promise<ITheDocumentResponse>;
+    getDocument(this: Therefore, docNo: number, isCheckOutStatusNeeded?: boolean, isIndexDataValuesNeeded?: boolean, isStreamsInfoAndDataNeeded?: boolean, isStreamsInfoNeeded?: boolean, versionNo?: number, isAccessMaskNeeded?: boolean, titleHideCategory?: boolean): Promise<TheDocument>;
     getDocumentStream(this: Therefore, docNo: number, streamNo: number, versionNo?: number): Promise<WSStreamInfoWithData>;
 }

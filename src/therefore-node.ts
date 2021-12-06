@@ -14,6 +14,7 @@ import { DocumentOperations } from './operations/document_operations.js';
 import { CategoryOperations } from './operations/category_operations.js';
 import { CaseOperations } from './operations/case_operations.js';
 import { TheCase } from './models/the_case.js';
+import { IGetCaseDocumentsResponse } from './interfaces/get_case_documents_response.js';
 class Therefore {
   url: string;
   username: string;
@@ -31,12 +32,21 @@ class Therefore {
     this.tenant = tenant
   }
 
-  public getDocument = DocumentOperations.prototype.getDocument;
+  //Document operations
+  public getDocument = DocumentOperations.prototype.getDocument
   public getDocumentStream = DocumentOperations.prototype.getDocumentStream
-
-  public getCaseDefinition = CaseOperations.prototype.getCaseDefinition;
+  //Case Operations
+  public getCaseDefinition = CaseOperations.prototype.getCaseDefinition
   public createCase = CaseOperations.prototype.createCase
-
+  public closeCase = CaseOperations.prototype.closeCase
+  public updateCase = CaseOperations.prototype.updateCase
+  public deleteCase = CaseOperations.prototype.deleteCase
+  public getCase = CaseOperations.prototype.getCase
+  public getCaseDocuments = CaseOperations.prototype.getCaseDocuments
+  //Category Operations
+  public getCategoriesTree = CategoryOperations.prototype.getCategoriesTree
+  public getCategoryNo = CategoryOperations.prototype.getCategoryNo
+  public getCategoryInfo = CategoryOperations.prototype.getCategoryInfo
 }
 
 export { Therefore };
@@ -50,3 +60,5 @@ export { FieldType };
 export { WSIndexDataItem };
 export { StringIndexData };
 export { WSStreamInfoWithData };
+export { ICategoryInfo }
+export { IGetCaseDocumentsResponse }
