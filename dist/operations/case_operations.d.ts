@@ -9,4 +9,5 @@ export declare class CaseOperations {
     deleteCase(this: Therefore, caseNo: number): Promise<void>;
     getCase(this: Therefore, caseNo: number): Promise<TheCase>;
     getCaseDocuments(this: Therefore, CaseNo: number, CategoryNo?: number): Promise<IGetCaseDocumentsResponse>;
+    saveCaseIndexDataQuick(this: Therefore, caseNo: number, updatedCase: TheCase): Promise<void>;
 }

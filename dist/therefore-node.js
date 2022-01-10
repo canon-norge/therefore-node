@@ -375,6 +375,12 @@ class CaseOperations {
         const data = await WebApi.prototype.post.call(this, 'GetCaseDocuments', body);
         return data;
     }
+    async saveCaseIndexDataQuick(caseNo, updatedCase) {
+        await WebApi.prototype.post.call(this, 'SaveCaseIndexDataQuick', {
+            CaseNo: caseNo,
+            IndexData: updatedCase.IndexDataItems
+        });
+    }
 }
 
 class TheCase {
@@ -385,6 +391,46 @@ class TheCase {
         this.CaseDefNo = caseDefNo,
             this.IndexDataItems = indexDataItems,
             this.DoFillDependentFields = doFillDependentFields;
+    }
+}
+
+class QueryOperations {
+    async executeMultiQuery(queries, fullText) {
+        console.log('Executing MultiQuery...');
+        let body = {
+            FullText: fullText,
+            Queries: queries
+        };
+        const data = await WebApi.prototype.post.call(this, 'ExecuteMultiQuery', body);
+        return data;
+    }
+}
+
+class DateIndexData {
+    FieldNo;
+    DataValue;
+    DataISO8601Value;
+    FieldName;
+    /**
+     *
+     * @param fieldNo
+     * Gets or sets the number of the field.
+     * Doing request set it to proper field number or to 0 (zero) in order to use the FieldName property instead.
+     * @param dataValue
+     * Gets or sets the string value of the field.
+     * @param dataISO8601Value
+     * Gets or sets date value of the field in ISO 8601 format (YYYY-MM-DD, example 2017-07-23).
+     * See also the *DataValue* property.
+     * The DataValue property is ignored if the DataISO8601Value property has a value.
+     * @param fieldName
+     * Gets or sets the name (actually column name) of the field.
+     * Doing request set the FieldNo property to 0 (zero) in order to use specified FieldName.
+     */
+    constructor(fieldNo, dataValue, dataISO8601Value, fieldName) {
+        this.FieldNo = fieldNo;
+        this.DataValue = dataValue;
+        this.DataISO8601Value = dataISO8601Value;
+        this.FieldName = fieldName;
     }
 }
 
@@ -416,13 +462,17 @@ class Therefore {
     deleteCase = CaseOperations.prototype.deleteCase;
     getCase = CaseOperations.prototype.getCase;
     getCaseDocuments = CaseOperations.prototype.getCaseDocuments;
+    saveCaseIndexDataQuick = CaseOperations.prototype.saveCaseIndexDataQuick;
     //Category Operations
     getCategoriesTree = CategoryOperations.prototype.getCategoriesTree;
     getCategoryNo = CategoryOperations.prototype.getCategoryNo;
     getCategoryInfo = CategoryOperations.prototype.getCategoryInfo;
+    //Query Operations
+    executeMultiQuery = QueryOperations.prototype.executeMultiQuery;
 }
 
 exports.CategoriesTree = CategoriesTree;
+exports.DateIndexData = DateIndexData;
 exports.StringIndexData = StringIndexData;
 exports.TheCase = TheCase;
 exports.TheDocument = TheDocument;

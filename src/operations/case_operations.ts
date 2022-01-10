@@ -87,5 +87,12 @@ export class CaseOperations {
     const data = await WebApi.prototype.post.call(this,'GetCaseDocuments', body)
     return data;
   }
+
+  async saveCaseIndexDataQuick(this: Therefore, caseNo: number, updatedCase: TheCase) {
+    const data = await WebApi.prototype.post.call(this, 'SaveCaseIndexDataQuick', {
+      CaseNo: caseNo,
+      IndexData: updatedCase.IndexDataItems
+    })
+  }
 }
 

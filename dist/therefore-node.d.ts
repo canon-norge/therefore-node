@@ -10,6 +10,7 @@ import { StringIndexData } from './models/string_index_data.js';
 import { WSStreamInfoWithData } from './models/ws_stream_info_with_data.js';
 import { TheCase } from './models/the_case.js';
 import { IGetCaseDocumentsResponse } from './interfaces/get_case_documents_response.js';
+import { DateIndexData } from './models/date_index_data.js';
 declare class Therefore {
     url: string;
     username: string;
@@ -27,9 +28,11 @@ declare class Therefore {
     deleteCase: (this: Therefore, caseNo: number) => Promise<void>;
     getCase: (this: Therefore, caseNo: number) => Promise<TheCase>;
     getCaseDocuments: (this: Therefore, CaseNo: number, CategoryNo?: number | undefined) => Promise<IGetCaseDocumentsResponse>;
+    saveCaseIndexDataQuick: (this: Therefore, caseNo: number, updatedCase: TheCase) => Promise<void>;
     getCategoriesTree: (this: Therefore) => Promise<CategoriesTree>;
     getCategoryNo: (this: Therefore, CategoryName: string) => Promise<number | undefined>;
     getCategoryInfo: (this: Therefore, CategoryNo: number) => Promise<ICategoryInfo>;
+    executeMultiQuery: (this: Therefore, queries: import("./models/multi_query.js").MultiQuery[], fullText?: string | undefined) => Promise<any>;
 }
 export { Therefore };
 export { CategoriesTree };
@@ -44,3 +47,4 @@ export { StringIndexData };
 export { WSStreamInfoWithData };
 export { ICategoryInfo };
 export { IGetCaseDocumentsResponse };
+export { DateIndexData };

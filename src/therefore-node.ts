@@ -15,6 +15,8 @@ import { CategoryOperations } from './operations/category_operations.js';
 import { CaseOperations } from './operations/case_operations.js';
 import { TheCase } from './models/the_case.js';
 import { IGetCaseDocumentsResponse } from './interfaces/get_case_documents_response.js';
+import { QueryOperations } from './operations/query_operations.js';
+import { DateIndexData } from './models/date_index_data.js';
 class Therefore {
   url: string;
   username: string;
@@ -43,10 +45,13 @@ class Therefore {
   public deleteCase = CaseOperations.prototype.deleteCase
   public getCase = CaseOperations.prototype.getCase
   public getCaseDocuments = CaseOperations.prototype.getCaseDocuments
+  public saveCaseIndexDataQuick = CaseOperations.prototype.saveCaseIndexDataQuick
   //Category Operations
   public getCategoriesTree = CategoryOperations.prototype.getCategoriesTree
   public getCategoryNo = CategoryOperations.prototype.getCategoryNo
   public getCategoryInfo = CategoryOperations.prototype.getCategoryInfo
+  //Query Operations
+  public executeMultiQuery = QueryOperations.prototype.executeMultiQuery
 }
 
 export { Therefore };
@@ -62,3 +67,4 @@ export { StringIndexData };
 export { WSStreamInfoWithData };
 export { ICategoryInfo }
 export { IGetCaseDocumentsResponse }
+export { DateIndexData }
