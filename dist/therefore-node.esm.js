@@ -374,7 +374,9 @@ class CaseOperations {
     async saveCaseIndexDataQuick(caseNo, updatedCase) {
         await WebApi.prototype.post.call(this, 'SaveCaseIndexDataQuick', {
             CaseNo: caseNo,
-            IndexData: updatedCase.IndexDataItems
+            IndexData: {
+                IndexDataItems: updatedCase.IndexDataItems
+            }
         });
     }
 }

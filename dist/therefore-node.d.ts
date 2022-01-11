@@ -28,7 +28,7 @@ declare class Therefore {
     deleteCase: (this: Therefore, caseNo: number) => Promise<void>;
     getCase: (this: Therefore, caseNo: number) => Promise<TheCase>;
     getCaseDocuments: (this: Therefore, CaseNo: number, CategoryNo?: number | undefined) => Promise<IGetCaseDocumentsResponse>;
-    saveCaseIndexDataQuick: (this: Therefore, caseNo: number, updatedCase: TheCase) => Promise<void>;
+    saveCaseIndexDataQuick: (this: Therefore, updatedCase: TheCase) => Promise<void>;
     getCategoriesTree: (this: Therefore) => Promise<CategoriesTree>;
     getCategoryNo: (this: Therefore, CategoryName: string) => Promise<number | undefined>;
     getCategoryInfo: (this: Therefore, CategoryNo: number) => Promise<ICategoryInfo>;
