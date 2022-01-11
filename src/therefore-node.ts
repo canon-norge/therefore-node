@@ -17,6 +17,7 @@ import { TheCase } from './models/the_case.js';
 import { IGetCaseDocumentsResponse } from './interfaces/get_case_documents_response.js';
 import { QueryOperations } from './operations/query_operations.js';
 import { DateIndexData } from './models/date_index_data.js';
+import { IntIndexData } from './models/int_index_data.js';
 class Therefore {
   url: string;
   username: string;
@@ -68,3 +69,4 @@ export { WSStreamInfoWithData };
 export { ICategoryInfo }
 export { IGetCaseDocumentsResponse }
 export { DateIndexData }
+export { IntIndexData }

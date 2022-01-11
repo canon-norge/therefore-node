@@ -436,6 +436,28 @@ class DateIndexData {
     }
 }
 
+class IntIndexData {
+    FieldNo;
+    DataValue;
+    FieldName;
+    /**
+     *
+     * @param fieldNo
+     * Gets or sets the number of the field.
+     * Doing request set it to proper field number or to 0 (zero) in order to use the FieldName property instead.
+     * @param dataValue
+     * Gets or sets the integer value of the field.
+     * @param fieldName
+     * Gets or sets the name (actually column name) of the field.
+     * Doing request set the FieldNo property to 0 (zero) in order to use specified FieldName.
+     */
+    constructor(fieldNo, dataValue, fieldName) {
+        this.FieldNo = fieldNo;
+        this.DataValue = dataValue;
+        this.FieldName = fieldName;
+    }
+}
+
 var Buffer = require('buffer/').Buffer;
 require('isomorphic-fetch');
 class Therefore {
@@ -475,6 +497,7 @@ class Therefore {
 
 exports.CategoriesTree = CategoriesTree;
 exports.DateIndexData = DateIndexData;
+exports.IntIndexData = IntIndexData;
 exports.StringIndexData = StringIndexData;
 exports.TheCase = TheCase;
 exports.TheDocument = TheDocument;
