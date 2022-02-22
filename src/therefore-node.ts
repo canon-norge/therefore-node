@@ -1,5 +1,6 @@
 var Buffer = require('buffer/').Buffer;
 require('isomorphic-fetch');
+
 import { CategoriesTree } from './models/categories_tree.js';
 import { ICategoryInfo } from './interfaces/category_info.js';
 import { CounterMode } from './enums/counter_mode.js';
@@ -18,6 +19,7 @@ import { IGetCaseDocumentsResponse } from './interfaces/get_case_documents_respo
 import { QueryOperations } from './operations/query_operations.js';
 import { DateIndexData } from './models/date_index_data.js';
 import { IntIndexData } from './models/int_index_data.js';
+import { QueryMode } from './enums/query_mode.js';
 class Therefore {
   url: string;
   username: string;
@@ -25,17 +27,20 @@ class Therefore {
   authHeader: string;
   apiVersion: string;
   tenant?: string;
+  client_type?: number;
 
-  constructor(url: string, username: string, password: string, tenant?: string) {
+  constructor(url: string, username: string, password: string, tenant?: string, client_type?: number) {
     url.slice(-1) == '/' ? (this.url = url) : (this.url = url + '/');
     this.username = username;
     this.password = password;
     this.authHeader = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
     this.apiVersion = 'theservice/v0001/restun/';
-    this.tenant = tenant
+    this.tenant = tenant,
+    this.client_type = client_type
   }
 
   //Document operations
+  public createDocument = DocumentOperations.prototype.createDocument
   public getDocument = DocumentOperations.prototype.getDocument
   public getDocumentStream = DocumentOperations.prototype.getDocumentStream
   //Case Operations
@@ -53,6 +58,7 @@ class Therefore {
   public getCategoryInfo = CategoryOperations.prototype.getCategoryInfo
   //Query Operations
   public executeMultiQuery = QueryOperations.prototype.executeMultiQuery
+  public executeSingleQuery = QueryOperations.prototype.executeSingleQuery
 }
 
 export { Therefore };
@@ -70,3 +76,4 @@ export { ICategoryInfo }
 export { IGetCaseDocumentsResponse }
 export { DateIndexData }
 export { IntIndexData }
+export { QueryMode }

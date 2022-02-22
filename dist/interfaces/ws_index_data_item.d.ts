@@ -9,14 +9,14 @@ import { ISingleKeywordData } from './single_keyword_data';
 import { IStringIndexData } from './string_index_data';
 import { ITableIndexData } from './table_index_data';
 export interface IWSIndexDataItem {
-    DateIndexData: IDateIndexData | null;
-    IntIndexData: IIntIndexData | null;
-    LogicalIndexData: ILogicalIndexData | null;
-    MoneyIndexData: IMoneyIndexData | null;
-    MultipleKeywordData: IMultipleKeywordData | null;
-    SingleKeywordData: ISingleKeywordData | null;
-    StringIndexData: IStringIndexData | null;
-    TableIndexData: ITableIndexData | null;
-    AccessMask: IAccessMask | null;
-    DateTimeIndexData: IDateTimeIndexData | null;
+    DateIndexData?: IDateIndexData;
+    IntIndexData?: IIntIndexData;
+    LogicalIndexData?: ILogicalIndexData;
+    MoneyIndexData?: IMoneyIndexData;
+    MultipleKeywordData?: IMultipleKeywordData;
+    SingleKeywordData?: ISingleKeywordData;
+    StringIndexData?: IStringIndexData;
+    TableIndexData?: ITableIndexData;
+    AccessMask?: IAccessMask;
+    DateTimeIndexData?: IDateTimeIndexData;
 }

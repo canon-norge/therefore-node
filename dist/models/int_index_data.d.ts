@@ -2,7 +2,7 @@ import { IIntIndexData } from "../interfaces/int_index_data";
 export declare class IntIndexData implements IIntIndexData {
     FieldNo: number;
     DataValue: number | null;
-    FieldName: string | null;
+    FieldName?: string;
     /**
      *
      * @param fieldNo
@@ -14,5 +14,5 @@ export declare class IntIndexData implements IIntIndexData {
      * Gets or sets the name (actually column name) of the field.
      * Doing request set the FieldNo property to 0 (zero) in order to use specified FieldName.
      */
-    constructor(fieldNo: number, dataValue: number | null, fieldName: string | null);
+    constructor(fieldNo: number, dataValue: number | null, fieldName: string);
 }

@@ -11,16 +11,16 @@ import { StringIndexData } from './string_index_data.js';
 import { TableIndexData } from './table_index_data.js';
 
 export class WSIndexDataItem implements IWSIndexDataItem {
-  DateIndexData: DateIndexData | null;
-  IntIndexData: IntIndexData | null;
-  LogicalIndexData: LogicalIndexData | null;
-  MoneyIndexData: MoneyIndexData | null;
-  MultipleKeywordData: MultipleKeywordData | null;
-  SingleKeywordData: SingleKeywordData | null;
-  StringIndexData: StringIndexData | null;
-  TableIndexData: TableIndexData | null; // ITableIndexData |
-  AccessMask: AccessMask | null; // IAccessMask |
-  DateTimeIndexData: DateTimeIndexData | null; // IDateTimeIndexData |
+  DateIndexData?: DateIndexData;
+  IntIndexData?: IntIndexData;
+  LogicalIndexData?: LogicalIndexData;
+  MoneyIndexData?: MoneyIndexData;
+  MultipleKeywordData?: MultipleKeywordData;
+  SingleKeywordData?: SingleKeywordData;
+  StringIndexData?: StringIndexData;
+  TableIndexData?: TableIndexData; // ITableIndexData |
+  AccessMask?: AccessMask; // IAccessMask |
+  DateTimeIndexData?: DateTimeIndexData; // IDateTimeIndexData |
 
   /**
    * 
@@ -36,16 +36,16 @@ export class WSIndexDataItem implements IWSIndexDataItem {
    * @param dateTimeIndexData 
    */
   constructor(
-    dateIndexData: DateIndexData | null,
-    intIndexData: IntIndexData | null,
-    logicalIndexData: LogicalIndexData | null,
-    moneyIndexData: MoneyIndexData | null,
-    multipleKeywordData: MultipleKeywordData | null,
-    singleKeywordData: SingleKeywordData | null,
-    stringIndexData: StringIndexData | null,
-    tableIndexData: TableIndexData | null,
-    accessMask: AccessMask  | null,
-    dateTimeIndexData: DateTimeIndexData | null,
+    dateIndexData: DateIndexData,
+    intIndexData: IntIndexData,
+    logicalIndexData: LogicalIndexData,
+    moneyIndexData: MoneyIndexData,
+    multipleKeywordData: MultipleKeywordData,
+    singleKeywordData: SingleKeywordData,
+    stringIndexData: StringIndexData,
+    tableIndexData: TableIndexData,
+    accessMask: AccessMask,
+    dateTimeIndexData: DateTimeIndexData,
   ) {
     this.DateIndexData = dateIndexData;
     this.IntIndexData = intIndexData;

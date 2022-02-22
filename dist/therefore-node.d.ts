@@ -12,6 +12,7 @@ import { TheCase } from './models/the_case.js';
 import { IGetCaseDocumentsResponse } from './interfaces/get_case_documents_response.js';
 import { DateIndexData } from './models/date_index_data.js';
 import { IntIndexData } from './models/int_index_data.js';
+import { QueryMode } from './enums/query_mode.js';
 declare class Therefore {
     url: string;
     username: string;
@@ -19,7 +20,9 @@ declare class Therefore {
     authHeader: string;
     apiVersion: string;
     tenant?: string;
-    constructor(url: string, username: string, password: string, tenant?: string);
+    client_type?: number;
+    constructor(url: string, username: string, password: string, tenant?: string, client_type?: number);
+    createDocument: (this: Therefore, document: TheDocument) => Promise<ICategoryInfo>;
     getDocument: (this: Therefore, docNo: number, isCheckOutStatusNeeded?: boolean | undefined, isIndexDataValuesNeeded?: boolean | undefined, isStreamsInfoAndDataNeeded?: boolean | undefined, isStreamsInfoNeeded?: boolean | undefined, versionNo?: number | undefined, isAccessMaskNeeded?: boolean | undefined, titleHideCategory?: boolean | undefined) => Promise<TheDocument>;
     getDocumentStream: (this: Therefore, docNo: number, streamNo: number, versionNo?: number | undefined) => Promise<WSStreamInfoWithData>;
     getCaseDefinition: (this: Therefore, caseDefinitionNo: number) => Promise<TheCase>;
@@ -33,7 +36,8 @@ declare class Therefore {
     getCategoriesTree: (this: Therefore) => Promise<CategoriesTree>;
     getCategoryNo: (this: Therefore, CategoryName: string) => Promise<number | undefined>;
     getCategoryInfo: (this: Therefore, CategoryNo: number) => Promise<ICategoryInfo>;
-    executeMultiQuery: (this: Therefore, queries: import("./models/multi_query.js").MultiQuery[], fullText?: string | undefined) => Promise<any>;
+    executeMultiQuery: (this: Therefore, queries: import("./models/query.js").Query[], fullText?: string | undefined) => Promise<any>;
+    executeSingleQuery: (this: Therefore, query: import("./models/query.js").Query, fullText?: string | undefined) => Promise<any>;
 }
 export { Therefore };
 export { CategoriesTree };
@@ -50,3 +54,4 @@ export { ICategoryInfo };
 export { IGetCaseDocumentsResponse };
 export { DateIndexData };
 export { IntIndexData };
+export { QueryMode };

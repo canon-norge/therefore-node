@@ -2,7 +2,7 @@ import { IMultipleKeywordData } from "../interfaces/multiple_keyword_data";
 export declare class MultipleKeywordData implements IMultipleKeywordData {
     FieldNo: number;
     DataValue: string[] | null;
-    FieldName: string | null;
+    FieldName?: string;
     KeywordNos: number[] | null;
     /**
      *
@@ -17,5 +17,5 @@ export declare class MultipleKeywordData implements IMultipleKeywordData {
      * @param keywordNos
      * Gets or sets multiple keyword numbers of the field.
      */
-    constructor(fieldNo: number, dataValue: string[] | null, fieldName: string | null, keywordNos: number[] | null);
+    constructor(fieldNo: number, dataValue: string[] | null, fieldName: string, keywordNos: number[] | null);
 }

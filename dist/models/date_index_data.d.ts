@@ -3,7 +3,7 @@ export declare class DateIndexData implements IDateIndexData {
     FieldNo: number;
     DataValue: string | null;
     DataISO8601Value: string | null;
-    FieldName: string | null;
+    FieldName?: string;
     /**
      *
      * @param fieldNo
@@ -19,5 +19,5 @@ export declare class DateIndexData implements IDateIndexData {
      * Gets or sets the name (actually column name) of the field.
      * Doing request set the FieldNo property to 0 (zero) in order to use specified FieldName.
      */
-    constructor(fieldNo: number, dataValue: string | null, dataISO8601Value: string | null, fieldName: string | null);
+    constructor(fieldNo: number, dataValue: string | null, dataISO8601Value: string | null, fieldName: string);
 }

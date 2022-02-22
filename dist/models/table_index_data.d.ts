@@ -3,7 +3,7 @@ import { WSTableFieldDataRow } from "./ws_table_field_data_row";
 export declare class TableIndexData implements ITableIndexData {
     FieldNo: number;
     DataValue: WSTableFieldDataRow[] | null;
-    FieldName: string | null;
+    FieldName?: string;
     /**
    *
    * @param fieldNo
@@ -15,5 +15,5 @@ export declare class TableIndexData implements ITableIndexData {
    * Gets or sets the name (actually column name) of the field.
    * Doing request set the FieldNo property to 0 (zero) in order to use specified FieldName.
    */
-    constructor(fieldNo: number, dataValue: WSTableFieldDataRow[] | null, fieldName: string | null);
+    constructor(fieldNo: number, dataValue: WSTableFieldDataRow[] | null, fieldName: string);
 }

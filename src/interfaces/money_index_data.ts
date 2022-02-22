@@ -1,6 +1,6 @@
 export interface IMoneyIndexData {
   FieldNo: number;
   DataValue: number | null;
-  FieldName: string | null;
+  FieldName?: string;
   DecimalDataValue: number | null;
 }

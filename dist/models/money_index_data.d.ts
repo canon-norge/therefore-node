@@ -2,7 +2,7 @@ import { IMoneyIndexData } from "../interfaces/money_index_data";
 export declare class MoneyIndexData implements IMoneyIndexData {
     FieldNo: number;
     DataValue: number | null;
-    FieldName: string | null;
+    FieldName?: string;
     DecimalDataValue: number | null;
     /**
      *
@@ -17,5 +17,5 @@ export declare class MoneyIndexData implements IMoneyIndexData {
      * Gets or sets the DECIMAL value of the field.
      * Value for the field sould be set either by DataValue or by DecimalDataValue proiperty.
      */
-    constructor(fieldNo: number, dataValue: number | null, fieldName: string | null, decimalDataValue: number | null);
+    constructor(fieldNo: number, dataValue: number | null, fieldName: string, decimalDataValue: number | null);
 }

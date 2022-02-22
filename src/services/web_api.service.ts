@@ -15,6 +15,9 @@ export class WebApi {
     if(this.tenant){
       request.headers = {...request.headers, ...{TenantName: this.tenant}}
     }
+    if(this.client_type){
+      request.headers = {...request.headers, ...{"The-Client-Type": this.client_type}}
+    }
     console.log(request)
     const response = await fetch(this.url + this.apiVersion + endPoint, request);
     if (response.status === 500) {

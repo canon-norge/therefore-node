@@ -188,6 +188,9 @@ class WebApi {
         if (this.tenant) {
             request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
         }
+        if (this.client_type) {
+            request.headers = { ...request.headers, ...{ "The-Client-Type": this.client_type } };
+        }
         console.log(request);
         const response = await fetch(this.url + this.apiVersion + endPoint, request);
         if (response.status === 500) {
@@ -402,6 +405,11 @@ class QueryOperations {
         const data = await WebApi.prototype.post.call(this, 'ExecuteMultiQuery', body);
         return data;
     }
+    async executeSingleQuery(query, fullText) {
+        console.log('Executing SingleQuery...');
+        const data = await WebApi.prototype.post.call(this, 'ExecuteSingleQUery', { Query: query, FullText: fullText });
+        return data;
+    }
 }
 
 class DateIndexData {
@@ -454,6 +462,14 @@ class IntIndexData {
     }
 }
 
+var QueryMode;
+(function (QueryMode) {
+    QueryMode[QueryMode["NormalQuery"] = 0] = "NormalQuery";
+    QueryMode[QueryMode["FileQuery"] = 1] = "FileQuery";
+    QueryMode[QueryMode["WorkflowQuery"] = 4] = "WorkflowQuery";
+    QueryMode[QueryMode["CaseQuery"] = 5] = "CaseQuery";
+})(QueryMode || (QueryMode = {}));
+
 var Buffer = require('buffer/').Buffer;
 require('isomorphic-fetch');
 class Therefore {
@@ -463,15 +479,18 @@ class Therefore {
     authHeader;
     apiVersion;
     tenant;
-    constructor(url, username, password, tenant) {
+    client_type;
+    constructor(url, username, password, tenant, client_type) {
         url.slice(-1) == '/' ? (this.url = url) : (this.url = url + '/');
         this.username = username;
         this.password = password;
         this.authHeader = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
         this.apiVersion = 'theservice/v0001/restun/';
-        this.tenant = tenant;
+        this.tenant = tenant,
+            this.client_type = client_type;
     }
     //Document operations
+    createDocument = DocumentOperations.prototype.createDocument;
     getDocument = DocumentOperations.prototype.getDocument;
     getDocumentStream = DocumentOperations.prototype.getDocumentStream;
     //Case Operations
@@ -489,7 +508,8 @@ class Therefore {
     getCategoryInfo = CategoryOperations.prototype.getCategoryInfo;
     //Query Operations
     executeMultiQuery = QueryOperations.prototype.executeMultiQuery;
+    executeSingleQuery = QueryOperations.prototype.executeSingleQuery;
 }
 
-export { CategoriesTree, CounterMode, DateIndexData, FieldType, IntIndexData, ItemType, StringIndexData, TheCase, TheDocument, Therefore, TreeItem, WSIndexDataItem, WSStreamInfoWithData };
+export { CategoriesTree, CounterMode, DateIndexData, FieldType, IntIndexData, ItemType, QueryMode, StringIndexData, TheCase, TheDocument, Therefore, TreeItem, WSIndexDataItem, WSStreamInfoWithData };
 //# sourceMappingURL=therefore-node.esm.js.map
