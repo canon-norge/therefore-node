@@ -13,24 +13,11 @@ require('isomorphic-fetch');
 export class DocumentOperations {
   
   async createDocument(this: Therefore, document: TheDocument) {
-    console.log(`Creating Document...`);
 
-    const body = document;
-    const request = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: this.authHeader,
-        'TenantName': this.tenant ?? ''
-      },
-      body: JSON.stringify(body),
-    };
+    const body = document
 
-    const response = await fetch(this.url + this.apiVersion + 'CreateDocument', request);
-    if(!response.ok){
-      console.error(response.body);
-    }
-    const data: ICategoryInfo = (await response.json()) as any;
+    const data = await WebApi.prototype.post.call(this,'CreateDocument', body)
+
     return data;
   }
 

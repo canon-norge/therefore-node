@@ -1,9 +1,8 @@
-import { ICategoryInfo } from '../interfaces/category_info';
 import { TheDocument } from '../models/the_document';
 import { WSStreamInfoWithData } from '../models/ws_stream_info_with_data';
 import { Therefore } from '../therefore-node';
 export declare class DocumentOperations {
-    createDocument(this: Therefore, document: TheDocument): Promise<ICategoryInfo>;
+    createDocument(this: Therefore, document: TheDocument): Promise<any>;
     /**
      * Retrieves document by DocNo from Therefore
      * @param this ThereforeClient

@@ -20,6 +20,7 @@ import { QueryOperations } from './operations/query_operations.js';
 import { DateIndexData } from './models/date_index_data.js';
 import { IntIndexData } from './models/int_index_data.js';
 import { QueryMode } from './enums/query_mode.js';
+import { OtherOperations } from './operations/other_operations.js';
 class Therefore {
   url: string;
   username: string;
@@ -59,6 +60,9 @@ class Therefore {
   //Query Operations
   public executeMultiQuery = QueryOperations.prototype.executeMultiQuery
   public executeSingleQuery = QueryOperations.prototype.executeSingleQuery
+  //Other Operations
+  public uploadSessionStart = OtherOperations.prototype.uploadSessionStart
+  public uploadSessionAppendChunkRaw = OtherOperations.prototype.uploadSessionAppendChunkRaw
 }
 
 export { Therefore };

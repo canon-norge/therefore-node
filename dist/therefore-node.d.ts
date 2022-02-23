@@ -22,7 +22,7 @@ declare class Therefore {
     tenant?: string;
     client_type?: number;
     constructor(url: string, username: string, password: string, tenant?: string, client_type?: number);
-    createDocument: (this: Therefore, document: TheDocument) => Promise<ICategoryInfo>;
+    createDocument: (this: Therefore, document: TheDocument) => Promise<any>;
     getDocument: (this: Therefore, docNo: number, isCheckOutStatusNeeded?: boolean | undefined, isIndexDataValuesNeeded?: boolean | undefined, isStreamsInfoAndDataNeeded?: boolean | undefined, isStreamsInfoNeeded?: boolean | undefined, versionNo?: number | undefined, isAccessMaskNeeded?: boolean | undefined, titleHideCategory?: boolean | undefined) => Promise<TheDocument>;
     getDocumentStream: (this: Therefore, docNo: number, streamNo: number, versionNo?: number | undefined) => Promise<WSStreamInfoWithData>;
     getCaseDefinition: (this: Therefore, caseDefinitionNo: number) => Promise<TheCase>;
@@ -38,6 +38,8 @@ declare class Therefore {
     getCategoryInfo: (this: Therefore, CategoryNo: number) => Promise<ICategoryInfo>;
     executeMultiQuery: (this: Therefore, queries: import("./models/query.js").Query[], fullText?: string | undefined) => Promise<any>;
     executeSingleQuery: (this: Therefore, query: import("./models/query.js").Query, fullText?: string | undefined) => Promise<any>;
+    uploadSessionStart: (this: Therefore, fileSize: number, fileExtension?: string | undefined) => Promise<string>;
+    uploadSessionAppendChunkRaw: (this: Therefore, sessionId: string, chunkPosition: number | undefined, filePath: string) => Promise<any>;
 }
 export { Therefore };
 export { CategoriesTree };

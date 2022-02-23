@@ -1,8 +1,28 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["therefore-node"] = {}));
-})(this, (function (exports) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('fs')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'fs'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["therefore-node"] = {}, global.fs));
+})(this, (function (exports, fs) { 'use strict';
+
+  function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+      Object.keys(e).forEach(function (k) {
+        if (k !== 'default') {
+          var d = Object.getOwnPropertyDescriptor(e, k);
+          Object.defineProperty(n, k, d.get ? d : {
+            enumerable: true,
+            get: function () { return e[k]; }
+          });
+        }
+      });
+    }
+    n["default"] = e;
+    return Object.freeze(n);
+  }
+
+  var fs__namespace = /*#__PURE__*/_interopNamespace(fs);
 
   class CategoriesTree {
       TreeItems;
@@ -180,7 +200,7 @@
   }
 
   class WebApi {
-      async post(endPoint, body) {
+      async post(endPoint, body, rawBody, headers) {
           let request = {
               method: 'POST',
               headers: {
@@ -191,11 +211,17 @@
           if (body) {
               request = { ...request, ...{ body: JSON.stringify(body) } };
           }
+          if (rawBody) {
+              request = { ...request, ...{ body: rawBody } };
+          }
           if (this.tenant) {
               request.headers = { ...request.headers, ...{ TenantName: this.tenant } };
           }
           if (this.client_type) {
               request.headers = { ...request.headers, ...{ "The-Client-Type": this.client_type } };
+          }
+          if (headers) {
+              request.headers = { ...request.headers, ...headers };
           }
           console.log(request);
           const response = await fetch(this.url + this.apiVersion + endPoint, request);
@@ -211,22 +237,8 @@
   require('isomorphic-fetch');
   class DocumentOperations {
       async createDocument(document) {
-          console.log(`Creating Document...`);
           const body = document;
-          const request = {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: this.authHeader,
-                  'TenantName': this.tenant ?? ''
-              },
-              body: JSON.stringify(body),
-          };
-          const response = await fetch(this.url + this.apiVersion + 'CreateDocument', request);
-          if (!response.ok) {
-              console.error(response.body);
-          }
-          const data = (await response.json());
+          const data = await WebApi.prototype.post.call(this, 'CreateDocument', body);
           return data;
       }
       /**
@@ -476,6 +488,27 @@
       QueryMode[QueryMode["CaseQuery"] = 5] = "CaseQuery";
   })(exports.QueryMode || (exports.QueryMode = {}));
 
+  class OtherOperations {
+      async uploadSessionStart(fileSize, fileExtension) {
+          const body = {
+              "FileSize": fileSize,
+              "FileExstension": fileExtension
+          };
+          const data = await WebApi.prototype.post.call(this, 'UploadSessionSTart', body);
+          return data;
+      }
+      async uploadSessionAppendChunkRaw(sessionId, chunkPosition = 0, filePath) {
+          const body = fs__namespace.readFileSync(filePath);
+          const headers = {
+              "Content-Type": "application/octet-stream",
+              "X-The-UploadSession-ChunkPosition": chunkPosition,
+              "X-The-UploadSession-Id": sessionId
+          };
+          const data = await WebApi.prototype.post.call(this, 'UploadSessionAppendChunkRaw', undefined, body, headers);
+          return data;
+      }
+  }
+
   var Buffer = require('buffer/').Buffer;
   require('isomorphic-fetch');
   class Therefore {
@@ -515,6 +548,9 @@
       //Query Operations
       executeMultiQuery = QueryOperations.prototype.executeMultiQuery;
       executeSingleQuery = QueryOperations.prototype.executeSingleQuery;
+      //Other Operations
+      uploadSessionStart = OtherOperations.prototype.uploadSessionStart;
+      uploadSessionAppendChunkRaw = OtherOperations.prototype.uploadSessionAppendChunkRaw;
   }
 
   exports.CategoriesTree = CategoriesTree;
