@@ -3,9 +3,6 @@ import { IGetCaseDocumentsResponse } from '../interfaces/get_case_documents_resp
 import { recursiveCategoriesTreeFindCategory } from '../services/recursive_functions';
 import { WebApi } from '../services/web_api.service';
 import { CategoriesTree, Therefore, TreeItem } from '../therefore-node';
-
-require('isomorphic-fetch');
-
 export class CategoryOperations {
 
   async getCategoriesTree(this: Therefore): Promise<CategoriesTree> {

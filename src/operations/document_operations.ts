@@ -7,9 +7,6 @@ import { WSStreamInfoUploadSessionData } from '../models/ws_stream_info_upload_s
 import { WSStreamInfoWithData } from '../models/ws_stream_info_with_data';
 import { WebApi } from '../services/web_api.service';
 import { Therefore } from '../therefore-node';
-
-require('isomorphic-fetch');
-
 export class DocumentOperations {
   
   async createDocument(this: Therefore, document: TheDocument) {

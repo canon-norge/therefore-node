@@ -1,5 +1,5 @@
-var Buffer = require('buffer/').Buffer;
-require('isomorphic-fetch');
+
+import "isomorphic-fetch"
 
 import { CategoriesTree } from './models/categories_tree.js';
 import { ICategoryInfo } from './interfaces/category_info.js';

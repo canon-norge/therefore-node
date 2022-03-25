@@ -1,3 +1,4 @@
+import 'isomorphic-fetch';
 import * as fs from 'fs';
 
 class CategoriesTree {
@@ -210,7 +211,6 @@ class WebApi {
     }
 }
 
-require('isomorphic-fetch');
 class DocumentOperations {
     async createDocument(document) {
         const body = document;
@@ -273,7 +273,6 @@ const recursiveTreeItemPrintFindCategory = (treeItem, categoryName, callback) =>
         treeItem.ChildItems.forEach((childItem) => recursiveTreeItemPrintFindCategory(childItem, categoryName, callback));
 };
 
-require('isomorphic-fetch');
 class CategoryOperations {
     async getCategoriesTree() {
         console.log('Getting Categories Tree');
@@ -485,8 +484,6 @@ class OtherOperations {
     }
 }
 
-var Buffer = require('buffer/').Buffer;
-require('isomorphic-fetch');
 class Therefore {
     url;
     username;

@@ -2,24 +2,25 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+require('isomorphic-fetch');
 var fs = require('fs');
 
 function _interopNamespace(e) {
-  if (e && e.__esModule) return e;
-  var n = Object.create(null);
-  if (e) {
-    Object.keys(e).forEach(function (k) {
-      if (k !== 'default') {
-        var d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: function () { return e[k]; }
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () { return e[k]; }
+                });
+            }
         });
-      }
-    });
-  }
-  n["default"] = e;
-  return Object.freeze(n);
+    }
+    n["default"] = e;
+    return Object.freeze(n);
 }
 
 var fs__namespace = /*#__PURE__*/_interopNamespace(fs);
@@ -234,7 +235,6 @@ class WebApi {
     }
 }
 
-require('isomorphic-fetch');
 class DocumentOperations {
     async createDocument(document) {
         const body = document;
@@ -297,7 +297,6 @@ const recursiveTreeItemPrintFindCategory = (treeItem, categoryName, callback) =>
         treeItem.ChildItems.forEach((childItem) => recursiveTreeItemPrintFindCategory(childItem, categoryName, callback));
 };
 
-require('isomorphic-fetch');
 class CategoryOperations {
     async getCategoriesTree() {
         console.log('Getting Categories Tree');
@@ -509,8 +508,6 @@ class OtherOperations {
     }
 }
 
-var Buffer = require('buffer/').Buffer;
-require('isomorphic-fetch');
 class Therefore {
     url;
     username;

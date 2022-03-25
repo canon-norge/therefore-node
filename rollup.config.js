@@ -1,6 +1,8 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import typescript from 'rollup-plugin-typescript2';
+// import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
+import dts from "rollup-plugin-dts"
 import pkg from './package.json';
 
 export default [
@@ -28,7 +30,7 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/therefore-node.ts',
-    external: ['buffer', 'uuid', 'whatwg-fetch'],
+    external: ['buffer', 'uuid', 'isomorphic-fetch'],
     output: [
       { file: pkg.main, format: 'cjs', sourcemap: true },
       { file: pkg.module, format: 'es', sourcemap: true },
@@ -36,5 +38,10 @@ export default [
     plugins: [
       typescript({ tsconfig: './tsconfig.json' }), // so Rollup can convert TypeScript to JavaScript
     ],
+  },
+  {
+    input: "./dist/dist/therefore-node.d.ts",
+    output: [{ file: "dist/therefore-node.d.ts", format: "es" }],
+    plugins: [dts()],
   },
 ];

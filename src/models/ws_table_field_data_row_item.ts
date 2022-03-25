@@ -3,7 +3,7 @@ import { DateIndexData } from "./date_index_data";
 import { IntIndexData } from "./int_index_data";
 import { LogicalIndexData } from "./logical_index_data";
 import { MoneyIndexData } from "./money_index_data";
-import { SingleKeywordData } from "./single_keyword_Data";
+import { SingleKeywordData } from "./single_keyword_data";
 import { StringIndexData } from "./string_index_data";
 
 export class WSTableFieldDataRowItem implements IWSTableFieldDataRowItem {
